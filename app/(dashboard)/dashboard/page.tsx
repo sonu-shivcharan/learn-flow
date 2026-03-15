@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import connectToDatabase from "@/lib/dbConnect";
 import User from "@/models/User";
 import { CourseList } from "@/components/CourseList";
+import { Recommendations } from "@/components/Recommendations";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -42,8 +43,15 @@ export default async function DashboardPage() {
         </div>
       </div>
       
-      <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Available Courses</h2>
+      <div className="mt-12">
+        <Recommendations />
+      </div>
+      
+      <div className="mt-12">
+        <div className="flex items-center gap-x-3 mb-6">
+            <div className="h-10 w-2 bg-zinc-900 rounded-full" />
+            <h2 className="text-2xl font-black text-zinc-900 tracking-tight">Available Courses</h2>
+        </div>
         <CourseList />
       </div>
     </div>

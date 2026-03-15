@@ -4,6 +4,7 @@ import connectToDatabase from "@/lib/dbConnect";
 import Course from "@/models/Course";
 import { Chapter, Lesson } from "@/models/ChapterLesson";
 import User from "@/models/User";
+import { Enrollment } from "@/models/Enrollment";
 
 export async function GET(
     req: Request,
@@ -47,7 +48,21 @@ export async function GET(
             lessons: lessons.filter(l => l.chapterId.toString() === chapter._id.toString())
         }));
 
-        return NextResponse.json({ course, chapters: chaptersWithLessons });
+        // Check if student is enrolled
+        let isEnrolled = false;
+        if (dbUser && dbUser.role === "STUDENT") {
+            const enrollment = await Enrollment.findOne({
+                userId: dbUser._id,
+                courseId: course._id
+            });
+            isEnrolled = !!enrollment;
+        }
+
+        return NextResponse.json({ 
+            course, 
+            chapters: chaptersWithLessons,
+            isEnrolled 
+        });
 
     } catch (error) {
         console.error("[COURSE_GET_ID]", error);
