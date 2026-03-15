@@ -1,7 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import connectToDatabase from "@/lib/db";
+import connectToDatabase from "@/lib/dbConnect";
 import User from "@/models/User";
+import { CourseList } from "@/components/CourseList";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -42,10 +43,8 @@ export default async function DashboardPage() {
       </div>
       
       <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Recommended For You</h2>
-        <div className="border rounded-md p-8 bg-zinc-50 flex items-center justify-center text-zinc-500">
-          No recommendations yet. Complete some quizzes or start a course!
-        </div>
+        <h2 className="text-xl font-bold mb-4">Available Courses</h2>
+        <CourseList />
       </div>
     </div>
   );
