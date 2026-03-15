@@ -31,6 +31,7 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["course", courseId] });
             queryClient.invalidateQueries({ queryKey: ["recommendations"] });
+            queryClient.invalidateQueries({ queryKey: ["dashboard-progress"] });
         }
     });
 
