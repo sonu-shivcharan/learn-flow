@@ -33,13 +33,13 @@ export function ProgressChart() {
 
   if (isLoading) {
     return (
-      <Card className="h-[400px] w-full rounded-3xl border shadow-sm">
-        <CardHeader>
-          <Skeleton className="h-8 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
+      <Card className="h-[350px] sm:h-[400px] w-full rounded-2xl sm:rounded-3xl border shadow-sm">
+        <CardHeader className="p-4 sm:p-8">
+          <Skeleton className="h-6 sm:h-8 w-[150px] sm:w-[250px]" />
+          <Skeleton className="h-3 sm:h-4 w-[120px] sm:w-[200px]" />
         </CardHeader>
-        <CardContent>
-          <Skeleton className="h-[250px] w-full rounded-xl" />
+        <CardContent className="p-4 sm:p-8">
+          <Skeleton className="h-[200px] sm:h-[250px] w-full rounded-xl" />
         </CardContent>
       </Card>
     )
@@ -90,25 +90,24 @@ export function ProgressChart() {
   }
 
   return (
-    <Card className="w-full overflow-hidden rounded-[2.5rem] border bg-card shadow-md">
-      <CardHeader className="border-b bg-muted/50 px-8 pt-8 pb-8">
-        <div className="mb-2 flex items-center gap-x-3">
-          <div className="h-10 w-2 rounded-full bg-primary" />
-          <CardTitle className="text-3xl font-black tracking-tight text-foreground select-none">
-            Your Learning Progress
+    <Card className="w-full overflow-hidden rounded-2xl sm:rounded-[2.5rem] border bg-card shadow-md">
+      <CardHeader className="border-b bg-muted/50 p-4 sm:px-8 sm:pt-8 sm:pb-8">
+        <div className="mb-1 sm:mb-2 flex items-center gap-x-2 sm:gap-x-3">
+          <div className="h-8 sm:h-10 w-1.5 sm:w-2 rounded-full bg-primary" />
+          <CardTitle className="text-xl sm:text-3xl font-black tracking-tight text-foreground select-none">
+            Your Progress
           </CardTitle>
         </div>
-        <CardDescription className="ml-5 text-sm font-medium text-muted-foreground select-none">
-          Track your completion status across all active enrollments.
+        <CardDescription className="ml-3 sm:ml-5 text-xs sm:text-sm font-medium text-muted-foreground select-none">
+          Track your completion across all enrollments.
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-2 pt-8 pb-8 sm:px-8">
-        <div className="h-[350px] w-full">
+      <CardContent className="p-2 sm:px-8 sm:pt-8 sm:pb-8">
+        <div className="h-[300px] sm:h-[350px] w-full lowercase">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={progressData}
-              margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-              barSize={40}
+              margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -119,16 +118,19 @@ export function ProgressChart() {
                 dataKey="courseTitle"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "var(--muted-foreground)", fontSize: 12, fontWeight: 600 }}
+                tick={{ fill: "var(--muted-foreground)", fontSize: 10, fontWeight: 600 }}
                 dy={10}
+                interval={0}
+                tickFormatter={(value) => value.length > 10 ? `${value.slice(0, 10)}...` : value}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "var(--muted-foreground)", fontSize: 12, fontWeight: 500 }}
-                dx={-10}
+                tick={{ fill: "var(--muted-foreground)", fontSize: 10, fontWeight: 500 }}
+                dx={0}
                 domain={[0, 100]}
                 tickFormatter={(value) => `${value}%`}
+                width={40}
               />
               <Tooltip
                 content={<CustomTooltip />}
@@ -136,9 +138,10 @@ export function ProgressChart() {
               />
               <Bar
                 dataKey="progressPercentage"
-                radius={[8, 8, 8, 8]}
+                radius={[4, 4, 4, 4]}
                 animationDuration={1500}
                 animationEasing="ease-out"
+                maxBarSize={45}
               >
                 {progressData.map((entry: any, index: number) => (
                   <Cell
