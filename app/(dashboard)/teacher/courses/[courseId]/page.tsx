@@ -25,6 +25,7 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [price, setPrice] = useState("");
+    const [chapterTitle, setChapterTitle] = useState("");
 
     useEffect(() => {
         fetch(`/api/courses/${resolvedParams.courseId}`)
@@ -73,7 +74,6 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
     const completionText = `(${[title, description, imageUrl, price, chapters.length > 0].filter(Boolean).length}/5) fields completed`;
     const isComplete = title && description && imageUrl && price && chapters.length > 0;
 
-const [chapterTitle, setChapterTitle] = useState("");
 
     const addChapter = async () => {
         if (!chapterTitle) return;

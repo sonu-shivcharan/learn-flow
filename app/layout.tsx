@@ -15,6 +15,8 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+import { QueryProvider } from "@/components/providers/QueryProvider"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,7 +35,9 @@ export default function RootLayout({
     >
       <body>
         <ClerkProvider signUpUrl="/register" signInUrl="/login">
-          <ThemeProvider>{children}</ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </QueryProvider>
         </ClerkProvider>
       </body>
     </html>
