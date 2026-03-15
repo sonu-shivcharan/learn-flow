@@ -30,6 +30,12 @@ export interface ILesson extends Document {
   isPublished: boolean;
   isFree: boolean;
   chapterId: mongoose.Types.ObjectId;
+  quiz?: {
+    question: string;
+    options: string[];
+    correctAnswer: string;
+    topic: string;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +48,12 @@ const LessonSchema: Schema = new Schema({
   isPublished: { type: Boolean, default: false },
   isFree: { type: Boolean, default: false },
   chapterId: { type: Schema.Types.ObjectId, ref: 'Chapter', required: true },
+  quiz: [{
+    question: { type: String, required: true },
+    options: [{ type: String, required: true }],
+    correctAnswer: { type: String, required: true },
+    topic: { type: String, required: true },
+  }],
 }, { timestamps: true });
 
 export const Lesson = mongoose.models.Lesson || mongoose.model<ILesson>('Lesson', LessonSchema);

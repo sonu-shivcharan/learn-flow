@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Quiz } from "@/components/Quiz";
 
 interface LessonClientProps {
     courseId: string;
@@ -28,8 +30,16 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
 
     const markAsComplete = async () => {
         try {
-            // Placeholder: we haven't built the POST route yet, but we will in Phase 2
-            alert("Mark as complete triggered.");
+            const res = await fetch(`/api/courses/${courseId}/lessons/${lessonId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ isCompleted: !isCompleted }),
+            });
+
+            if (res.ok) {
+                const updatedProgress = await res.json();
+                setData({ ...data, userProgress: updatedProgress });
+            }
         } catch (error) {
             console.error(error);
         }
@@ -62,28 +72,49 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
             </div>
             
             <div className="p-4">
-                <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative shadow-lg">
-                    {lesson.videoUrl ? (
-                         <video 
-                            controls 
-                            className="w-full h-full object-contain"
-                            src={lesson.videoUrl}
-                         >
-                            Your browser does not support the video tag.
-                         </video>
-                    ) : (
-                        <div className="text-zinc-500 font-medium">
-                            No Video Provided for this Lesson
+                <Tabs defaultValue="video" className="w-full">
+                    <TabsList className="mb-4">
+                        <TabsTrigger value="video">Lesson Video</TabsTrigger>
+                        {lesson.quiz && lesson.quiz.length > 0 && (
+                            <TabsTrigger value="quiz">Assessment Quiz</TabsTrigger>
+                        )}
+                    </TabsList>
+                    
+                    <TabsContent value="video" className="space-y-4">
+                        <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative shadow-lg">
+                            {lesson.videoUrl ? (
+                                <video 
+                                    controls 
+                                    className="w-full h-full object-contain"
+                                    src={lesson.videoUrl}
+                                >
+                                    Your browser does not support the video tag.
+                                </video>
+                            ) : (
+                                <div className="text-zinc-500 font-medium">
+                                    No Video Provided for this Lesson
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
 
-                <div className="mt-8 space-y-4">
-                    <h1 className="text-2xl font-bold">{lesson.title}</h1>
-                    <p className="text-zinc-600 whitespace-pre-wrap leading-relaxed">
-                        {lesson.description || "No description provided for this lesson."}
-                    </p>
-                </div>
+                        <div className="mt-8 space-y-4">
+                            <h1 className="text-2xl font-bold">{lesson.title}</h1>
+                            <p className="text-zinc-600 whitespace-pre-wrap leading-relaxed">
+                                {lesson.description || "No description provided for this lesson."}
+                            </p>
+                        </div>
+                    </TabsContent>
+
+                    {lesson.quiz && lesson.quiz.length > 0 && (
+                        <TabsContent value="quiz">
+                            <Quiz 
+                                courseId={courseId} 
+                                lessonId={lessonId} 
+                                questions={lesson.quiz} 
+                            />
+                        </TabsContent>
+                    )}
+                </Tabs>
             </div>
         </div>
     );

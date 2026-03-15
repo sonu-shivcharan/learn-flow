@@ -46,3 +46,35 @@ export async function GET(
         return new NextResponse("Internal Error", { status: 500 });
     }
 }
+
+export async function PUT(
+    req: Request,
+    props: { params: Promise<{ courseId: string, lessonId: string }> }
+) {
+    try {
+        const { userId } = await auth();
+        if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+
+        const { isCompleted } = await req.json();
+        const resolvedParams = await props.params;
+
+        await connectToDatabase();
+        const dbUser = await User.findOne({ clerkId: userId });
+
+        const userProgress = await UserProgress.findOneAndUpdate(
+            {
+                userId: dbUser._id,
+                lessonId: resolvedParams.lessonId,
+            },
+            {
+                isCompleted
+            },
+            { upsert: true, new: true }
+        );
+
+        return NextResponse.json(userProgress);
+    } catch (error) {
+        console.error("[LESSON_PROGRESS_PUT]", error);
+        return new NextResponse("Internal Error", { status: 500 });
+    }
+}

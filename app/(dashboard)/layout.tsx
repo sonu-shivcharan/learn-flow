@@ -1,4 +1,30 @@
+"use client";
+
 import { UserButton } from "@clerk/nextjs";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { LayoutDashboard, Compass } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const SidebarItem = ({ icon: Icon, label, href }: { icon: any, label: string, href: string }) => {
+  const pathname = usePathname();
+  const isActive = (pathname === "/" && href === "/") || pathname === href || pathname?.startsWith(`${href}/`);
+
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "flex items-center gap-x-2 text-zinc-500 text-sm font-medium pl-6 transition-all hover:text-zinc-600 hover:bg-zinc-300/20",
+        isActive && "text-blue-700 bg-blue-200/20 hover:bg-blue-200/20 hover:text-blue-700 border-r-4 border-blue-700"
+      )}
+    >
+      <div className="flex items-center gap-x-2 py-4">
+        <Icon size={22} className={cn("text-zinc-500", isActive && "text-blue-700")} />
+        {label}
+      </div>
+    </Link>
+  );
+};
 
 const DashboardLayout = ({
   children
@@ -18,13 +44,8 @@ const DashboardLayout = ({
             LearnFlow
           </div>
           <div className="flex flex-col w-full">
-            {/* Sidebar routes will go here */}
-            <div className="p-4 bg-blue-50/50 text-blue-700 font-medium text-sm flex items-center cursor-pointer hover:bg-blue-100/50 transition">
-              Dashboard
-            </div>
-            <div className="p-4 text-zinc-500 font-medium text-sm flex items-center cursor-pointer hover:bg-zinc-100 transition">
-              Browse
-            </div>
+            <SidebarItem icon={LayoutDashboard} label="Dashboard" href="/dashboard" />
+            <SidebarItem icon={Compass} label="Browse" href="/search" />
           </div>
         </div>
       </div>
