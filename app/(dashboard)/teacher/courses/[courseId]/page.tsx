@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, LayoutDashboard, ListChecks, CircleDollarSign, Image as ImageIcon, PlusCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, LayoutDashboard, ListChecks, CircleDollarSign, PlusCircle } from "lucide-react";
 
 interface CourseEditorProps {
     params: Promise<{ courseId: string }>;
@@ -99,7 +102,6 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            {/* ... rest of header ... */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex flex-col gap-y-2">
                     <Link href="/teacher/courses" className="flex items-center text-sm hover:opacity-75 transition mb-6">
@@ -108,7 +110,7 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                     </Link>
                     <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-2xl font-bold">Course setup</h1>
+                            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Course setup</h1>
                             <span className="text-sm text-zinc-500 font-medium">{completionText}</span>
                         </div>
                     </div>
@@ -124,38 +126,41 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
                 <div className="space-y-6">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center gap-x-2">
-                            <div className="rounded-full p-2 bg-emerald-100">
+                    <Card className="border-2 border-emerald-50 shadow-sm hover:shadow-md transition-all">
+                        <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
+                            <div className="rounded-xl p-2.5 bg-emerald-100/50">
                                 <LayoutDashboard className="h-5 w-5 text-emerald-700" />
                             </div>
-                            <CardTitle className="text-xl text-emerald-950 font-bold">Customize your course</CardTitle>
+                            <CardTitle className="text-xl text-emerald-950 font-black tracking-tight uppercase">Customize your course</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <label className="text-sm font-bold text-emerald-900">Course Title</label>
-                                <input 
-                                    className="flex h-11 w-full rounded-xl border-2 border-emerald-100 bg-emerald-50/30 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-all mt-2"
+                        <CardContent className="space-y-6 pt-4">
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-emerald-900 ml-1">Course Title</Label>
+                                <Input 
+                                    className="h-11 rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    placeholder="e.g. 'Advanced React Mastery'"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     onBlur={() => onUpdate({ title })}
                                 />
                             </div>
-                            <div>
-                                <label className="text-sm font-bold text-emerald-900">Course Description</label>
-                                <textarea 
-                                    className="flex min-h-[120px] w-full rounded-xl border-2 border-emerald-100 bg-emerald-50/30 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-all mt-2"
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-emerald-900 ml-1">Course Description</Label>
+                                <Textarea 
+                                    className="min-h-[140px] rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    placeholder="Enter a compelling description..."
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     onBlur={() => onUpdate({ description })}
                                 />
                             </div>
-                            <div>
-                                <label className="text-sm font-bold text-emerald-900">Course Image URL</label>
-                                <input 
-                                    className="flex h-11 w-full rounded-xl border-2 border-emerald-100 bg-emerald-50/30 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-all mt-2"
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-emerald-900 ml-1">Course Image URL</Label>
+                                <Input 
+                                    className="h-11 rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    placeholder="https://example.com/image.jpg"
                                     value={imageUrl}
                                     onChange={(e) => setImageUrl(e.target.value)}
                                     onBlur={() => onUpdate({ imageUrl })}
@@ -164,19 +169,20 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader className="flex flex-row items-center gap-x-2">
-                            <div className="rounded-full p-2 bg-sky-100">
+                    <Card className="border-2 border-sky-50 shadow-sm hover:shadow-md transition-all">
+                        <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
+                            <div className="rounded-xl p-2.5 bg-sky-100/50">
                                 <CircleDollarSign className="h-5 w-5 text-sky-700" />
                             </div>
-                            <CardTitle className="text-xl text-sky-950 font-bold">Sell your course</CardTitle>
+                            <CardTitle className="text-xl text-sky-950 font-black tracking-tight uppercase">Sell your course</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <div>
-                                <label className="text-sm font-bold text-sky-900">Course Price ($)</label>
-                                <input 
+                        <CardContent className="pt-4">
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-sky-900 ml-1">Course Price ($)</Label>
+                                <Input 
                                     type="number"
-                                    className="flex h-11 w-full rounded-xl border-2 border-sky-100 bg-sky-50/30 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all mt-2"
+                                    className="h-11 rounded-xl border-2 border-sky-50 bg-sky-50/20 focus-visible:ring-sky-500 transition-all"
+                                    placeholder="0 for free"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
                                     onBlur={() => onUpdate({ price: parseFloat(price) })}
@@ -187,44 +193,47 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                 </div>
 
                 <div className="space-y-6">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div className="flex items-center gap-x-2">
-                                <div className="rounded-full p-2 bg-purple-100">
+                    <Card className="border-2 border-purple-50 shadow-sm hover:shadow-md transition-all">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <div className="flex items-center gap-x-3">
+                                <div className="rounded-xl p-2.5 bg-purple-100/50">
                                     <ListChecks className="h-5 w-5 text-purple-700" />
                                 </div>
-                                <CardTitle className="text-xl text-purple-950 font-bold">Course chapters</CardTitle>
+                                <CardTitle className="text-xl text-purple-950 font-black tracking-tight uppercase">Course chapters</CardTitle>
                             </div>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center gap-x-2">
-                                <input 
-                                    className="flex h-10 w-full rounded-lg border-2 border-purple-100 bg-purple-50/30 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 transition-all"
-                                    placeholder="Add new chapter title..."
+                        <CardContent className="space-y-6 pt-4">
+                            <div className="flex items-center gap-x-3">
+                                <Input 
+                                    className="h-11 rounded-xl border-2 border-purple-50 bg-purple-50/20 focus-visible:ring-purple-500 transition-all"
+                                    placeholder="e.g. 'Introduction to Hooks'"
                                     value={chapterTitle}
                                     onChange={(e) => setChapterTitle(e.target.value)}
                                 />
-                                <Button onClick={addChapter} size="sm" className="bg-purple-600 hover:bg-purple-700">
+                                <Button onClick={addChapter} className="h-11 px-6 bg-purple-600 hover:bg-purple-700 rounded-xl font-bold">
                                     Add
                                 </Button>
                             </div>
 
                             {chapters.length === 0 ? (
-                                <div className="italic text-sm text-zinc-500 py-10 text-center border-2 border-dashed rounded-xl">
-                                    No chapters yet. Add one to get started!
+                                <div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-purple-50 rounded-2xl bg-purple-50/10 text-zinc-400">
+                                    <PlusCircle className="h-12 w-12 mb-4 opacity-20" />
+                                    <p className="text-sm italic font-medium tracking-tight">No chapters yet. Add one to get started!</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
                                     {chapters.map((chapter: any) => (
                                         <div 
                                             key={chapter._id} 
-                                            className="flex items-center gap-x-2 bg-white border-2 border-purple-50 text-purple-900 font-bold rounded-xl mb-4 text-sm p-4 shadow-sm hover:border-purple-200 transition-all cursor-pointer hover:shadow-md"
+                                            className="group flex items-center gap-x-3 bg-white border-2 border-purple-50/50 text-purple-900 font-bold rounded-xl text-sm p-4 shadow-sm hover:border-purple-200 hover:shadow-md transition-all cursor-pointer"
                                             onClick={() => router.push(`/teacher/courses/${resolvedParams.courseId}/chapters/${chapter._id}`)}
                                         >
-                                            <ListChecks className="h-4 w-4 text-purple-600" />
-                                            {chapter.title}
+                                            <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
+                                                <ListChecks className="h-4 w-4 text-purple-600" />
+                                            </div>
+                                            <span className="truncate">{chapter.title}</span>
                                             <div className="ml-auto flex items-center gap-x-2">
-                                                <Badge variant={chapter.isPublished ? "default" : "secondary"}>
+                                                <Badge variant={chapter.isPublished ? "default" : "secondary"} className="rounded-lg px-3 py-1 text-[10px] font-black uppercase tracking-wider">
                                                     {chapter.isPublished ? "Published" : "Draft"}
                                                 </Badge>
                                             </div>
@@ -233,8 +242,8 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                                 </div>
                             )}
                         </CardContent>
-                        <CardFooter>
-                            <p className="text-xs text-zinc-500">Chapters will appear here as you create them.</p>
+                        <CardFooter className="pt-0">
+                            <p className="text-xs text-zinc-500 font-medium px-1 underline underline-offset-4 decoration-purple-200">Reorder with drag and drop coming soon.</p>
                         </CardFooter>
                     </Card>
                 </div>

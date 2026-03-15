@@ -5,8 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, LayoutDashboard, Video, HelpCircle, Plus, Trash } from "lucide-react";
 
 interface LessonEditorProps {
@@ -119,7 +123,7 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
                         Back to chapter setup
                     </Link>
                     <div className="flex flex-col gap-y-1 mt-4">
-                        <h1 className="text-3xl font-bold text-purple-950">Lesson setup</h1>
+                        <h1 className="text-3xl font-bold text-purple-950 tracking-tight">Lesson setup</h1>
                         <span className="text-sm text-zinc-500 font-medium">{completionText}</span>
                     </div>
                 </div>
@@ -136,27 +140,29 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
-                    <Card className="border-2 border-purple-50">
+                    <Card className="border-2 border-purple-50 shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
                             <div className="rounded-xl p-2.5 bg-purple-100/50">
                                 <LayoutDashboard className="h-5 w-5 text-purple-700" />
                             </div>
-                            <CardTitle className="text-xl text-purple-950">Lesson information</CardTitle>
+                            <CardTitle className="text-xl text-purple-950 font-black tracking-tight uppercase">Lesson information</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4 pt-4">
-                            <div>
-                                <label className="text-sm font-bold text-purple-900 ml-1">Lesson Title</label>
-                                <input 
-                                    className="flex h-11 w-full rounded-xl border-2 border-purple-50 bg-purple-50/20 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 transition-all mt-2"
+                        <CardContent className="space-y-6 pt-4">
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-purple-900 ml-1">Lesson Title</Label>
+                                <Input 
+                                    className="h-11 rounded-xl border-2 border-purple-50 bg-purple-50/20 focus-visible:ring-purple-500 transition-all font-medium"
+                                    placeholder="e.g. 'Introduction to React Hooks'"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     onBlur={() => onUpdate({ title })}
                                 />
                             </div>
-                            <div>
-                                <label className="text-sm font-bold text-purple-900 ml-1">Description</label>
-                                <textarea 
-                                    className="flex min-h-[120px] w-full rounded-xl border-2 border-purple-50 bg-purple-50/20 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 transition-all mt-2"
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-purple-900 ml-1">Description</Label>
+                                <Textarea 
+                                    className="min-h-[120px] rounded-xl border-2 border-purple-50 bg-purple-50/20 focus-visible:ring-purple-500 transition-all"
+                                    placeholder="Explain what students will learn..."
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     onBlur={() => onUpdate({ description })}
@@ -165,25 +171,26 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-2 border-sky-50">
+                    <Card className="border-2 border-sky-50 shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
                             <div className="rounded-xl p-2.5 bg-sky-100/50">
                                 <Video className="h-5 w-5 text-sky-700" />
                             </div>
-                            <CardTitle className="text-xl text-sky-950">Lesson video</CardTitle>
+                            <CardTitle className="text-xl text-sky-950 font-black tracking-tight uppercase">Lesson video</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4 pt-4">
-                            <div>
-                                <label className="text-sm font-bold text-sky-900 ml-1">Video URL (Direct link)</label>
-                                <input 
-                                    className="flex h-11 w-full rounded-xl border-2 border-sky-50 bg-sky-50/20 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 transition-all mt-2"
+                        <CardContent className="space-y-6 pt-4">
+                            <div className="space-y-2">
+                                <Label className="text-sm font-bold text-sky-900 ml-1">Video URL (Direct link)</Label>
+                                <Input 
+                                    className="h-11 rounded-xl border-2 border-sky-50 bg-sky-50/20 focus-visible:ring-sky-500 transition-all"
+                                    placeholder="e.g. 'https://example.com/video.mp4'"
                                     value={videoUrl}
                                     onChange={(e) => setVideoUrl(e.target.value)}
                                     onBlur={() => onUpdate({ videoUrl })}
                                 />
                             </div>
                             {videoUrl && (
-                                <div className="aspect-video mt-4 rounded-xl overflow-hidden border-2 border-sky-100 bg-black">
+                                <div className="aspect-video mt-4 rounded-2xl overflow-hidden border-2 border-sky-100 bg-black shadow-lg">
                                     <video src={videoUrl} controls className="w-full h-full" />
                                 </div>
                             )}
@@ -192,51 +199,53 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
                 </div>
 
                 <div className="space-y-6">
-                    <Card className="border-2 border-rose-50">
+                    <Card className="border-2 border-rose-50 shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div className="flex items-center gap-x-3">
                                 <div className="rounded-xl p-2.5 bg-rose-100/50">
                                     <HelpCircle className="h-5 w-5 text-rose-700" />
                                 </div>
-                                <CardTitle className="text-xl text-rose-950">Assessment Quiz</CardTitle>
+                                <CardTitle className="text-xl text-rose-950 font-black tracking-tight uppercase">Assessment Quiz</CardTitle>
                             </div>
-                            <Button onClick={addQuizQuestion} variant="outline" size="sm" className="border-rose-200 text-rose-700 hover:bg-rose-50">
+                            <Button onClick={addQuizQuestion} variant="outline" size="sm" className="border-rose-200 text-rose-700 hover:bg-rose-50 rounded-xl font-bold px-4">
                                 <Plus className="h-4 w-4 mr-2" />
                                 Add Question
                             </Button>
                         </CardHeader>
-                        <CardContent className="space-y-6 pt-4">
+                        <CardContent className="space-y-8 pt-4">
                             {quiz.length === 0 ? (
-                                <div className="italic text-sm text-zinc-500 py-12 text-center border-2 border-dashed border-rose-100 rounded-2xl bg-rose-50/10">
-                                    No quiz questions yet.
+                                <div className="italic text-sm text-zinc-500 py-16 text-center border-2 border-dashed border-rose-100 rounded-2xl bg-rose-50/10">
+                                    No quiz questions yet. Create an assessment for your students.
                                 </div>
                             ) : (
-                                <div className="space-y-8">
+                                <div className="space-y-10">
                                     {quiz.map((q, qIndex) => (
-                                        <div key={qIndex} className="p-6 bg-rose-50/30 rounded-2xl border-2 border-rose-50 space-y-4 relative group">
-                                            <button 
+                                        <div key={qIndex} className="p-6 bg-rose-50/20 rounded-3xl border-2 border-rose-50 space-y-6 relative group hover:border-rose-100 transition-all">
+                                            <Button 
                                                 onClick={() => removeQuizQuestion(qIndex)}
-                                                className="absolute top-4 right-4 p-2 text-rose-300 hover:text-rose-600 transition-colors"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="absolute top-4 right-4 text-rose-300 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                                             >
                                                 <Trash className="h-4 w-4" />
-                                            </button>
+                                            </Button>
                                             
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-bold text-rose-900 ml-1 uppercase tracking-wider">Question {qIndex + 1}</label>
-                                                <input 
-                                                    className="w-full bg-white border-2 border-rose-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-rose-500 outline-none"
+                                            <div className="space-y-3">
+                                                <Label className="text-xs font-black text-rose-900 ml-1 uppercase tracking-[0.2em] opacity-60">Question {qIndex + 1}</Label>
+                                                <Input 
+                                                    className="h-11 rounded-xl border-2 border-rose-100 bg-white focus-visible:ring-rose-500 font-bold"
                                                     value={q.question}
                                                     onChange={(e) => updateQuizQuestion(qIndex, "question", e.target.value)}
                                                     onBlur={() => onUpdate({ quiz })}
                                                 />
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-3">
+                                            <div className="grid grid-cols-2 gap-4">
                                                 {q.options.map((option: string, oIndex: number) => (
-                                                    <div key={oIndex} className="space-y-1">
-                                                        <label className="text-[10px] font-bold text-rose-700 ml-1">Option {String.fromCharCode(65 + oIndex)}</label>
-                                                        <input 
-                                                            className="w-full bg-white border-2 border-rose-50 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-rose-500 outline-none"
+                                                    <div key={oIndex} className="space-y-2">
+                                                        <Label className="text-[10px] font-black text-rose-700 ml-1 uppercase opacity-60">Option {String.fromCharCode(65 + oIndex)}</Label>
+                                                        <Input 
+                                                            className="h-10 rounded-xl border-2 border-rose-50 bg-white focus-visible:ring-rose-500 text-xs font-medium"
                                                             value={option}
                                                             onChange={(e) => updateQuizOption(qIndex, oIndex, e.target.value)}
                                                             onBlur={() => onUpdate({ quiz })}
@@ -245,24 +254,30 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
                                                 ))}
                                             </div>
 
-                                            <div className="flex gap-4">
-                                                <div className="flex-1 space-y-1">
-                                                    <label className="text-[10px] font-bold text-emerald-700 ml-1">Correct Answer</label>
-                                                    <select 
-                                                        className="w-full bg-emerald-50 border-2 border-emerald-100 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-emerald-500 outline-none"
-                                                        value={q.correctAnswer}
-                                                        onChange={(e) => {
-                                                            updateQuizQuestion(qIndex, "correctAnswer", e.target.value);
+                                            <div className="grid grid-cols-2 gap-6">
+                                                <div className="space-y-2">
+                                                    <Label className="text-[10px] font-black text-emerald-700 ml-1 uppercase opacity-60">Correct Answer</Label>
+                                                    <Select 
+                                                        value={q.correctAnswer} 
+                                                        onValueChange={(val) => {
+                                                            updateQuizQuestion(qIndex, "correctAnswer", val);
                                                             onUpdate({ quiz });
                                                         }}
                                                     >
-                                                        {q.options.map((o: string) => <option key={o} value={o}>{o}</option>)}
-                                                    </select>
+                                                        <SelectTrigger className="h-10 rounded-xl border-2 border-emerald-100 bg-emerald-50/50 text-emerald-900 font-bold text-xs ring-0 focus:ring-emerald-500">
+                                                            <SelectValue placeholder="Pick correct answer" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="rounded-xl border-2 border-emerald-100">
+                                                            {q.options.map((o: string) => (
+                                                                <SelectItem key={o} value={o} className="text-xs font-bold text-emerald-900">{o}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </div>
-                                                <div className="flex-1 space-y-1">
-                                                    <label className="text-[10px] font-bold text-rose-700 ml-1">Topic Tag</label>
-                                                    <input 
-                                                        className="w-full bg-white border-2 border-rose-50 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-rose-500 outline-none"
+                                                <div className="space-y-2">
+                                                    <Label className="text-[10px] font-black text-rose-700 ml-1 uppercase opacity-60">Topic Tag</Label>
+                                                    <Input 
+                                                        className="h-10 rounded-xl border-2 border-rose-50 bg-white focus-visible:ring-rose-500 text-xs font-bold italic"
                                                         value={q.topic}
                                                         onChange={(e) => updateQuizQuestion(qIndex, "topic", e.target.value)}
                                                         onBlur={() => onUpdate({ quiz })}
