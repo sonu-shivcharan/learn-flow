@@ -6,26 +6,9 @@ import User from "@/models/User";
 
 export async function GET(req: Request) {
   try {
-    await connectToDatabase();
-    const courses = await Course.find({ isPublished: true }).sort({ createdAt: -1 });
-    return NextResponse.json({ courses });
-  } catch (error) {
-    console.error("[COURSES_GET]", error);
-    return new NextResponse("Internal Error", { status: 500 });
-  }
-}
-
-export async function POST(req: Request) {
-  try {
     const { userId } = await auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const { title } = await req.json();
-
-    if (!title) {
-      return new NextResponse("Title is required", { status: 400 });
     }
 
     await connectToDatabase();
@@ -35,14 +18,11 @@ export async function POST(req: Request) {
       return new NextResponse("Forbidden", { status: 403 });
     }
 
-    const course = await Course.create({
-      title,
-      instructorId: dbUser._id,
-    });
+    const courses = await Course.find({ instructorId: dbUser._id }).sort({ createdAt: -1 });
 
-    return NextResponse.json(course);
+    return NextResponse.json(courses);
   } catch (error) {
-    console.error("[COURSES_POST]", error);
+    console.error("[TEACHER_COURSES_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
