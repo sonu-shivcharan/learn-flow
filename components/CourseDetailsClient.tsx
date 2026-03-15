@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 interface CourseDetailsClientProps {
@@ -53,7 +54,7 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
     return (
         <div className="p-6 max-w-4xl mx-auto space-y-8 pb-32">
             <div className="space-y-4">
-                <div className="aspect-video w-full bg-zinc-100 rounded-2xl overflow-hidden relative border-4 border-white shadow-xl">
+                <div className="aspect-video w-full bg-zinc-100 rounded-lg overflow-hidden relative border shadow-sm">
                     {course.imageUrl ? (
                         <img src={course.imageUrl} alt={course.title} className="object-cover w-full h-full" />
                     ) : (
@@ -62,43 +63,36 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
                         </div>
                     )}
                     {!isEnrolled && (
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[2px]">
-                            <Button size="lg" className="rounded-full px-10 h-14 text-lg font-bold shadow-2xl transition-all hover:scale-105" onClick={onEnroll} disabled={isEnrolling}>
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[1px]">
+                            <Button size="lg" onClick={onEnroll} disabled={isEnrolling}>
                                 {isEnrolling ? "Enrolling..." : "Enroll Now"}
                             </Button>
                         </div>
                     )}
                 </div>
-                <div className="flex justify-between items-center bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-4xl font-black text-zinc-900 tracking-tight">{course.title}</h1>
-                        <p className="text-zinc-500 mt-2 font-medium max-w-xl">{course.description || "No description provided."}</p>
+                        <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">{course.title}</h1>
+                        <p className="text-muted-foreground mt-2 max-w-xl">{course.description || "No description provided."}</p>
                     </div>
-                    {isEnrolled ? (
-                        <div className="bg-emerald-50 text-emerald-700 px-6 py-3 font-black rounded-2xl border-2 border-emerald-100 flex items-center gap-x-2">
-                            <span>✓</span> Enrolled
-                        </div>
-                    ) : (
-                        course.price ? (
-                            <div className="bg-blue-50 text-blue-700 px-6 py-3 font-black rounded-2xl border-2 border-blue-100 text-xl">
-                                ${course.price}
-                            </div>
+                    <div>
+                        {isEnrolled ? (
+                            <Badge variant="secondary" className="px-4 py-2 text-sm">
+                                Enrolled
+                            </Badge>
                         ) : (
-                            <div className="bg-emerald-50 text-emerald-700 px-6 py-3 font-black rounded-2xl border-2 border-emerald-100 text-xl">
-                                Free
-                            </div>
-                        )
-                    )}
+                            <Badge className="px-4 py-2 text-sm" variant="default">
+                                {course.price ? `$${course.price}` : "Free"}
+                            </Badge>
+                        )}
+                    </div>
                 </div>
             </div>
 
             <Separator className="bg-zinc-100 h-1 rounded-full" />
 
             <div className="space-y-6">
-                <div className="flex items-center gap-x-3">
-                    <div className="h-10 w-2 bg-blue-600 rounded-full" />
-                    <h2 className="text-3xl font-black text-zinc-900">Course Syllabus</h2>
-                </div>
+                <h2 className="text-2xl font-bold text-zinc-900">Course Syllabus</h2>
                 
                 {chapters.length === 0 ? (
                     <div className="text-center py-20 bg-zinc-50 rounded-3xl border-2 border-dashed border-zinc-200">
@@ -107,12 +101,12 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
                 ) : (
                     <div className="grid gap-6">
                         {chapters.map((chapter: any, index: number) => (
-                            <div key={chapter._id} className="group border-2 border-zinc-50 rounded-3xl p-6 bg-white hover:border-blue-100 transition-all shadow-sm">
-                                <div className="flex items-center gap-x-4 mb-6">
-                                    <div className="h-12 w-12 rounded-2xl bg-zinc-900 text-white flex items-center justify-center font-black text-xl shadow-lg">
+                            <div key={chapter._id} className="border rounded-xl p-6 bg-white shadow-sm">
+                                <div className="flex items-center gap-x-4 mb-4">
+                                    <div className="h-10 w-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-lg">
                                         {index + 1}
                                     </div>
-                                    <h3 className="font-black text-2xl text-zinc-800">
+                                    <h3 className="font-semibold text-xl text-zinc-800">
                                         {chapter.title}
                                     </h3>
                                 </div>
@@ -121,22 +115,22 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
                                         <p className="text-sm text-zinc-400 font-medium italic py-4 px-2">No lessons in this chapter yet.</p>
                                     )}
                                     {chapter.lessons.map((lesson: any, lIndex: number) => (
-                                        <div key={lesson._id} className="flex items-center justify-between p-4 bg-zinc-50/50 rounded-2xl border-2 border-transparent hover:border-zinc-100 hover:bg-white transition-all group/lesson">
-                                            <div className="flex items-center gap-x-4">
-                                                <div className="h-8 w-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold ring-4 ring-white">
-                                                    {lIndex + 1}
+                                        <div key={lesson._id} className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-transparent transition-all">
+                                            <div className="flex items-center gap-x-3">
+                                                <div className="text-xs text-muted-foreground font-medium">
+                                                    {lIndex + 1}.
                                                 </div>
-                                                <span className="font-bold text-zinc-700">{lesson.title}</span>
+                                                <span className="font-medium text-zinc-700 text-sm">{lesson.title}</span>
                                             </div>
                                             {isEnrolled ? (
-                                                <Button className="rounded-xl font-bold bg-white text-zinc-900 border-2 border-zinc-100 hover:bg-zinc-900 hover:text-white transition-all shadow-sm" asChild>
+                                                <Button variant="outline" size="sm" asChild>
                                                     <a href={`/courses/${course._id}/lessons/${lesson._id}`}>
                                                         Start Learning
                                                     </a>
                                                 </Button>
                                             ) : (
-                                                <div className="text-xs font-bold text-zinc-400 flex items-center gap-x-1 opacity-0 group/lesson-hover:opacity-100 transition-opacity">
-                                                    <span>🔒</span> Enroll to unlock
+                                                <div className="text-xs text-muted-foreground flex items-center gap-x-1">
+                                                    <span>🔒</span> Enroll
                                                 </div>
                                             )}
                                         </div>

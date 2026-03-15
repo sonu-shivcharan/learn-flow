@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Quiz } from "@/components/Quiz";
+import { Badge } from "@/components/ui/badge";
 import { Download, CheckCircle, Trash2, Loader2 } from "lucide-react";
 import { cacheVideo, removeCachedVideo, checkIsCached, getCachedVideoUrl } from "@/lib/offlineStorage";
 
@@ -125,7 +126,6 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                 <Button 
                     onClick={markAsComplete} 
                     variant={isCompleted ? "outline" : "default"}
-                    className={isCompleted ? "text-emerald-600 border-emerald-600 bg-emerald-50" : ""}
                 >
                     {isCompleted ? "Completed" : "Mark as Complete"}
                 </Button>
@@ -141,7 +141,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                     </TabsList>
                     
                     <TabsContent value="video" className="space-y-4">
-                        <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative shadow-lg">
+                        <div className="aspect-video bg-zinc-100 rounded-md overflow-hidden flex items-center justify-center relative border">
                             {lesson.videoUrl ? (
                                 getYouTubeId(lesson.videoUrl) ? (
                                     <iframe
@@ -152,7 +152,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
-                                        className="w-full h-full shadow-lg"
+                                        className="w-full h-full"
                                     />
                                 ) : (
                                     <video 
@@ -176,10 +176,10 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                                 <div className="flex items-center">
                                     {offlineStatus === "cached" ? (
                                         <div className="flex items-center gap-x-2">
-                                            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full flex items-center gap-1">
+                                            <Badge variant="secondary" className="flex items-center gap-1">
                                                 <CheckCircle className="h-3.5 w-3.5" /> Downloaded
-                                            </span>
-                                            <Button variant="ghost" size="icon" onClick={handleRemoveDownload} className="text-rose-500 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-full">
+                                            </Badge>
+                                            <Button variant="ghost" size="icon" onClick={handleRemoveDownload} className="text-destructive h-8 w-8">
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </div>
@@ -188,7 +188,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                                             <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" /> Downloading...
                                         </Button>
                                     ) : offlineStatus === "not_cached" ? (
-                                        <Button onClick={handleDownload} variant="outline" size="sm" className="rounded-full font-semibold text-xs h-8">
+                                        <Button onClick={handleDownload} variant="outline" size="sm">
                                             <Download className="h-3.5 w-3.5 mr-2" /> Download Offline
                                         </Button>
                                     ) : null}

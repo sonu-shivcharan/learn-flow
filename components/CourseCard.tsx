@@ -29,7 +29,7 @@ export function CourseCard({ id, title, description, imageUrl, price, category }
             </CardHeader>
             <CardFooter className="flex justify-between items-center pr-4">
                {category && <Badge variant="secondary">{category}</Badge>}
-               <Link href={`/courses/${id}`} className="text-sm font-medium text-blue-600 hover:text-blue-800 ml-auto">
+               <Link href={`/courses/${id}`} className="text-sm font-medium hover:underline ml-auto">
                     View Course &rarr;
                </Link>
             </CardFooter>
