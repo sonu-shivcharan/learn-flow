@@ -8,8 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
+interface Course {
+  _id: string;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  isPublished: boolean;
+}
+
 export default function TeacherCoursesPage() {
-  const { data: courses = [], isLoading } = useQuery({
+  const { data: courses = [], isLoading } = useQuery<Course[]>({
     queryKey: ["teacher-courses"],
     queryFn: async () => {
       const res = await fetch("/api/teacher/courses");
@@ -78,7 +86,7 @@ export default function TeacherCoursesPage() {
             </Link>
           </div>
         ) : (
-          courses.map((course) => (
+          courses.map((course: Course) => (
             <Card key={course._id} className="group overflow-hidden border shadow-sm hover:shadow-md transition-all">
               <div className="aspect-video relative overflow-hidden bg-zinc-100">
                 {course.imageUrl ? (
