@@ -4,6 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { ClerkProvider } from "@clerk/nextjs"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -40,7 +41,11 @@ export default function RootLayout({
       <body>
         <ClerkProvider signUpUrl="/register" signInUrl="/login">
           <QueryProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+            </ThemeProvider>
           </QueryProvider>
         </ClerkProvider>
       </body>
