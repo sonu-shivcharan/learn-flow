@@ -107,7 +107,7 @@ export function Quiz({ courseId, lessonId, questions }: QuizProps) {
                 </Card>
 
                 <div className="max-w-5xl mx-auto border-t border-zinc-100 pt-12">
-                    <Recommendations />
+                    <Recommendations topics={wrongTopics} courseId={courseId} />
                 </div>
             </div>
         );

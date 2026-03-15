@@ -8,11 +8,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function Recommendations() {
+interface RecommendationsProps {
+    topics?: string[];
+    courseId?: string;
+}
+
+export function Recommendations({ topics, courseId }: RecommendationsProps) {
     const { data: courses = [], isLoading } = useQuery({
-        queryKey: ["recommendations"],
+        queryKey: ["recommendations", topics?.join(","), courseId],
         queryFn: async () => {
-            const res = await fetch("/api/recommendations");
+            const url = new URL("/api/recommendations", window.location.origin);
+            if (topics && topics.length > 0) {
+                url.searchParams.set("topics", topics.join(","));
+            }
+            if (courseId) {
+                url.searchParams.set("courseId", courseId);
+            }
+            const res = await fetch(url.toString());
             if (!res.ok) throw new Error("Failed to fetch recommendations");
             return res.json();
         }
