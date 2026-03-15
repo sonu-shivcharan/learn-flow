@@ -106,14 +106,14 @@ export default function ChapterEditorPage({ params }: ChapterEditorProps) {
                 <div className="flex flex-col gap-y-2">
                     <Link 
                         href={`/teacher/courses/${resolvedParams.courseId}`} 
-                        className="flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-700 transition"
+                        className="flex items-center text-sm font-medium hover:underline transition"
                     >
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Back to course setup
                     </Link>
                     <div className="flex flex-col gap-y-1 mt-4">
-                        <h1 className="text-3xl font-bold text-emerald-950 tracking-tight">Chapter details</h1>
-                        <span className="text-sm text-zinc-500 font-medium">{completionText}</span>
+                        <h1 className="text-2xl font-bold">Chapter details</h1>
+                        <span className="text-sm text-muted-foreground">{completionText}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-x-2">
@@ -129,45 +129,41 @@ export default function ChapterEditorPage({ params }: ChapterEditorProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
-                    <Card className="border-2 border-emerald-50 shadow-sm hover:shadow-md transition-all">
+                    <Card className="border shadow-sm">
                         <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
-                            <div className="rounded-xl p-2.5 bg-emerald-100/50">
-                                <LayoutDashboard className="h-5 w-5 text-emerald-700" />
-                            </div>
-                            <CardTitle className="text-xl text-emerald-950 font-black tracking-tight uppercase">Customize chapter</CardTitle>
+                            <LayoutDashboard className="h-5 w-5 text-zinc-700" />
+                            <CardTitle className="text-xl">Customize chapter</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-4">
                             <div className="space-y-2">
-                                <Label className="text-sm font-bold text-emerald-900 ml-1">Chapter Title</Label>
+                                <Label className="text-sm font-medium">Chapter Title</Label>
                                 <Input 
-                                    className="h-11 rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    className="h-10"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     onBlur={() => onUpdate({ title })}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-sm font-bold text-emerald-900 ml-1">Chapter Description</Label>
+                                <Label className="text-sm font-medium">Chapter Description</Label>
                                 <Textarea 
-                                    className="min-h-[140px] rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    className="min-h-[140px]"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     onBlur={() => onUpdate({ description })}
                                 />
-                                <p className="text-xs text-zinc-400 mt-2 px-1">Describe what students will learn in this specific chapter.</p>
+                                <p className="text-xs text-muted-foreground mt-2">Describe what students will learn in this specific chapter.</p>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-2 border-sky-50 shadow-sm hover:shadow-md transition-all">
+                    <Card className="border shadow-sm">
                         <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
-                            <div className="rounded-xl p-2.5 bg-sky-100/50">
-                                <Eye className="h-5 w-5 text-sky-700" />
-                            </div>
-                            <CardTitle className="text-xl text-sky-950 font-black tracking-tight uppercase">Access settings</CardTitle>
+                            <Eye className="h-5 w-5 text-zinc-700" />
+                            <CardTitle className="text-xl">Access settings</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4">
-                            <div className="flex items-center space-x-4 p-5 bg-sky-50/30 rounded-2xl border-2 border-sky-50">
+                            <div className="flex items-center space-x-4 p-4 bg-zinc-50 rounded-md border">
                                 <Checkbox 
                                     id="isFree"
                                     checked={isFree}
@@ -175,11 +171,10 @@ export default function ChapterEditorPage({ params }: ChapterEditorProps) {
                                         setIsFree(!!checked);
                                         onUpdate({ isFree: !!checked });
                                     }}
-                                    className="h-5 w-5 rounded border-sky-300 data-[state=checked]:bg-sky-600"
                                 />
                                 <div className="space-y-1">
-                                    <Label htmlFor="isFree" className="text-sm font-bold text-sky-900 cursor-pointer">Make this chapter free</Label>
-                                    <p className="text-xs text-zinc-500 leading-relaxed">Free chapters are available for preview to all visitors, helping you build trust.</p>
+                                    <Label htmlFor="isFree" className="text-sm font-medium cursor-pointer">Make this chapter free</Label>
+                                    <p className="text-xs text-muted-foreground">Free chapters are available for preview to all visitors.</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -187,47 +182,43 @@ export default function ChapterEditorPage({ params }: ChapterEditorProps) {
                 </div>
 
                 <div className="space-y-6">
-                    <Card className="border-2 border-purple-50 shadow-sm hover:shadow-md transition-all">
+                    <Card className="border shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div className="flex items-center gap-x-3">
-                                <div className="rounded-xl p-2.5 bg-purple-100/50">
-                                    <Video className="h-5 w-5 text-purple-700" />
-                                </div>
-                                <CardTitle className="text-xl text-purple-950 font-black tracking-tight uppercase">Chapter lessons</CardTitle>
+                                <Video className="h-5 w-5 text-zinc-700" />
+                                <CardTitle className="text-xl">Chapter lessons</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-4">
                             <div className="flex items-center gap-x-3">
                                 <Input 
-                                    className="h-11 rounded-xl border-2 border-purple-50 bg-purple-50/20 focus-visible:ring-purple-500 transition-all font-medium"
+                                    className="h-10"
                                     placeholder="Add a new lesson title..."
                                     value={lessonTitle}
                                     onChange={(e) => setLessonTitle(e.target.value)}
                                 />
-                                <Button onClick={addLesson} className="bg-purple-600 hover:bg-purple-700 h-11 rounded-xl px-6 font-bold">
+                                <Button onClick={addLesson}>
                                     Add
                                 </Button>
                             </div>
 
                             {lessons.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-purple-50 rounded-2xl bg-purple-50/10 text-zinc-400">
+                                <div className="flex flex-col items-center justify-center py-16 border border-dashed rounded-lg bg-zinc-50/50 text-muted-foreground">
                                     <PlusCircle className="h-12 w-12 mb-4 opacity-20" />
-                                    <p className="text-sm italic font-medium tracking-tight">No lessons in this chapter yet.</p>
+                                    <p className="text-sm italic">No lessons in this chapter yet.</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
-                                    {lessons.map((lesson: any) => (
+                                     {lessons.map((lesson: any) => (
                                         <div 
                                             key={lesson._id} 
-                                            className="group flex items-center gap-x-3 bg-white border-2 border-purple-50/50 text-purple-900 font-bold rounded-xl text-sm p-4 shadow-sm hover:border-purple-200 hover:shadow-md transition-all cursor-pointer"
+                                            className="group flex items-center gap-x-3 bg-zinc-50 border text-zinc-900 font-medium rounded-lg text-sm p-3 hover:bg-white transition-all cursor-pointer"
                                             onClick={() => router.push(`/teacher/courses/${resolvedParams.courseId}/chapters/${resolvedParams.chapterId}/lessons/${lesson._id}`)}
                                         >
-                                            <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
-                                                <Video className="h-4 w-4 text-purple-600" />
-                                            </div>
+                                            <Video className="h-4 w-4 text-zinc-500" />
                                             <span className="truncate">{lesson.title}</span>
                                             <div className="ml-auto flex items-center gap-x-2">
-                                                <Badge variant={lesson.isPublished ? "default" : "secondary"} className="rounded-lg px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                                                <Badge variant={lesson.isPublished ? "default" : "secondary"}>
                                                     {lesson.isPublished ? "Published" : "Draft"}
                                                 </Badge>
                                             </div>
@@ -237,7 +228,7 @@ export default function ChapterEditorPage({ params }: ChapterEditorProps) {
                             )}
                         </CardContent>
                         <CardFooter className="pt-0">
-                            <p className="text-xs text-zinc-500 font-medium px-1 underline underline-offset-4 decoration-purple-200">Click on a lesson to edit its video and content.</p>
+                            <p className="text-xs text-muted-foreground">Click on a lesson to edit its content.</p>
                         </CardFooter>
                     </Card>
                 </div>

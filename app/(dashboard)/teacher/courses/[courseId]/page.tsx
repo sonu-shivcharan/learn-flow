@@ -104,14 +104,14 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
         <div className="p-6 max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex flex-col gap-y-2">
-                    <Link href="/teacher/courses" className="flex items-center text-sm hover:opacity-75 transition mb-6">
+                    <Link href="/teacher/courses" className="flex items-center text-sm hover:underline transition mb-6">
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Back to course list
                     </Link>
                     <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col gap-y-2">
-                            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Course setup</h1>
-                            <span className="text-sm text-zinc-500 font-medium">{completionText}</span>
+                            <h1 className="text-2xl font-bold">Course setup</h1>
+                            <span className="text-sm text-muted-foreground">{completionText}</span>
                         </div>
                     </div>
                 </div>
@@ -128,18 +128,16 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
                 <div className="space-y-6">
-                    <Card className="border-2 border-emerald-50 shadow-sm hover:shadow-md transition-all">
+                    <Card className="border shadow-sm">
                         <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
-                            <div className="rounded-xl p-2.5 bg-emerald-100/50">
-                                <LayoutDashboard className="h-5 w-5 text-emerald-700" />
-                            </div>
-                            <CardTitle className="text-xl text-emerald-950 font-black tracking-tight uppercase">Customize your course</CardTitle>
+                            <LayoutDashboard className="h-5 w-5 text-zinc-700" />
+                            <CardTitle className="text-xl">Customize your course</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-4">
-                            <div className="space-y-2">
-                                <Label className="text-sm font-bold text-emerald-900 ml-1">Course Title</Label>
+                             <div className="space-y-2">
+                                <Label className="text-sm font-medium">Course Title</Label>
                                 <Input 
-                                    className="h-11 rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    className="h-10"
                                     placeholder="e.g. 'Advanced React Mastery'"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
@@ -147,9 +145,9 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-sm font-bold text-emerald-900 ml-1">Course Description</Label>
+                                <Label className="text-sm font-medium">Course Description</Label>
                                 <Textarea 
-                                    className="min-h-[140px] rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    className="min-h-[140px]"
                                     placeholder="Enter a compelling description..."
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
@@ -157,9 +155,9 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-sm font-bold text-emerald-900 ml-1">Course Image URL</Label>
+                                <Label className="text-sm font-medium">Course Image URL</Label>
                                 <Input 
-                                    className="h-11 rounded-xl border-2 border-emerald-50 bg-emerald-50/20 focus-visible:ring-emerald-500 transition-all"
+                                    className="h-10"
                                     placeholder="https://example.com/image.jpg"
                                     value={imageUrl}
                                     onChange={(e) => setImageUrl(e.target.value)}
@@ -169,19 +167,17 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-2 border-sky-50 shadow-sm hover:shadow-md transition-all">
+                    <Card className="border shadow-sm">
                         <CardHeader className="flex flex-row items-center gap-x-3 pb-2">
-                            <div className="rounded-xl p-2.5 bg-sky-100/50">
-                                <CircleDollarSign className="h-5 w-5 text-sky-700" />
-                            </div>
-                            <CardTitle className="text-xl text-sky-950 font-black tracking-tight uppercase">Sell your course</CardTitle>
+                            <CircleDollarSign className="h-5 w-5 text-zinc-700" />
+                            <CardTitle className="text-xl">Sell your course</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4">
                             <div className="space-y-2">
-                                <Label className="text-sm font-bold text-sky-900 ml-1">Course Price ($)</Label>
+                                <Label className="text-sm font-medium">Course Price ($)</Label>
                                 <Input 
                                     type="number"
-                                    className="h-11 rounded-xl border-2 border-sky-50 bg-sky-50/20 focus-visible:ring-sky-500 transition-all"
+                                    className="h-10"
                                     placeholder="0 for free"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
@@ -193,47 +189,43 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                 </div>
 
                 <div className="space-y-6">
-                    <Card className="border-2 border-purple-50 shadow-sm hover:shadow-md transition-all">
+                    <Card className="border shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div className="flex items-center gap-x-3">
-                                <div className="rounded-xl p-2.5 bg-purple-100/50">
-                                    <ListChecks className="h-5 w-5 text-purple-700" />
-                                </div>
-                                <CardTitle className="text-xl text-purple-950 font-black tracking-tight uppercase">Course chapters</CardTitle>
+                                <ListChecks className="h-5 w-5 text-zinc-700" />
+                                <CardTitle className="text-xl">Course chapters</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-4">
                             <div className="flex items-center gap-x-3">
                                 <Input 
-                                    className="h-11 rounded-xl border-2 border-purple-50 bg-purple-50/20 focus-visible:ring-purple-500 transition-all"
+                                    className="h-10"
                                     placeholder="e.g. 'Introduction to Hooks'"
                                     value={chapterTitle}
                                     onChange={(e) => setChapterTitle(e.target.value)}
                                 />
-                                <Button onClick={addChapter} className="h-11 px-6 bg-purple-600 hover:bg-purple-700 rounded-xl font-bold">
+                                <Button onClick={addChapter}>
                                     Add
                                 </Button>
                             </div>
 
                             {chapters.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-purple-50 rounded-2xl bg-purple-50/10 text-zinc-400">
+                                <div className="flex flex-col items-center justify-center py-16 border border-dashed rounded-lg bg-zinc-50/50 text-muted-foreground">
                                     <PlusCircle className="h-12 w-12 mb-4 opacity-20" />
-                                    <p className="text-sm italic font-medium tracking-tight">No chapters yet. Add one to get started!</p>
+                                    <p className="text-sm italic">No chapters yet. Add one to get started!</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
                                     {chapters.map((chapter: any) => (
                                         <div 
                                             key={chapter._id} 
-                                            className="group flex items-center gap-x-3 bg-white border-2 border-purple-50/50 text-purple-900 font-bold rounded-xl text-sm p-4 shadow-sm hover:border-purple-200 hover:shadow-md transition-all cursor-pointer"
+                                            className="group flex items-center gap-x-3 bg-zinc-50 border text-zinc-900 font-medium rounded-lg text-sm p-3 hover:bg-white transition-all cursor-pointer"
                                             onClick={() => router.push(`/teacher/courses/${resolvedParams.courseId}/chapters/${chapter._id}`)}
                                         >
-                                            <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
-                                                <ListChecks className="h-4 w-4 text-purple-600" />
-                                            </div>
+                                            <ListChecks className="h-4 w-4 text-zinc-500" />
                                             <span className="truncate">{chapter.title}</span>
                                             <div className="ml-auto flex items-center gap-x-2">
-                                                <Badge variant={chapter.isPublished ? "default" : "secondary"} className="rounded-lg px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                                                <Badge variant={chapter.isPublished ? "default" : "secondary"}>
                                                     {chapter.isPublished ? "Published" : "Draft"}
                                                 </Badge>
                                             </div>
@@ -243,7 +235,7 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                             )}
                         </CardContent>
                         <CardFooter className="pt-0">
-                            <p className="text-xs text-zinc-500 font-medium px-1 underline underline-offset-4 decoration-purple-200">Reorder with drag and drop coming soon.</p>
+                            <p className="text-xs text-muted-foreground">Reorder with drag and drop coming soon.</p>
                         </CardFooter>
                     </Card>
                 </div>
