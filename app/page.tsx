@@ -1,19 +1,32 @@
-import { Button } from "@/components/ui/button"
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { SignInButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 
-export default function Page() {
+export default async function HomePage() {
+  const { userId } = await auth();
+
+  if (userId) {
+    return redirect("/dashboard");
+  }
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
+    <div className="flex h-screen items-center justify-center p-4">
+      <div className="text-center space-y-6">
+        <h1 className="text-5xl font-bold tracking-tight">
+          Welcome to <span className="text-blue-600">LearnFlow</span>
+        </h1>
+        <p className="text-lg text-zinc-500 max-w-[600px] mx-auto">
+          Your personalized e-learning journey starts here. AI-driven pathways, immersive lessons, and dynamic tracking.
+        </p>
         <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
+          <SignInButton mode="modal" fallbackRedirectUrl="/onboarding">
+            <Button size="lg" className="w-48 text-lg rounded-full">
+              Get Started
+            </Button>
+          </SignInButton>
         </div>
       </div>
     </div>
-  )
+  );
 }
