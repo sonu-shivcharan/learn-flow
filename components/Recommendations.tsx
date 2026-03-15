@@ -43,7 +43,7 @@ export function Recommendations({ topics, courseId }: RecommendationsProps) {
     return (
         <div className="space-y-8 mt-12">
             <div className="flex items-center gap-x-2">
-                <Sparkles className="h-5 w-5 text-zinc-700" />
+                <Sparkles className="h-5 w-5 text-primary" />
                 <div>
                     <h2 className="text-2xl font-semibold">Recommended for You</h2>
                     <p className="text-sm text-muted-foreground">Based on your learning history</p>
@@ -52,11 +52,11 @@ export function Recommendations({ topics, courseId }: RecommendationsProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course: any) => (
                     <Card key={course._id} className="overflow-hidden border shadow-sm">
-                        <div className="aspect-video relative overflow-hidden bg-zinc-50">
+                        <div className="aspect-video relative overflow-hidden bg-muted">
                             {course.imageUrl ? (
                                 <img src={course.imageUrl} alt={course.title} className="object-cover w-full h-full" />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-zinc-300 font-bold text-xs uppercase tracking-widest">No Image</div>
+                                <div className="w-full h-full flex items-center justify-center text-muted-foreground font-bold text-xs uppercase tracking-widest">No Image</div>
                             )}
                             <div className="absolute top-2 right-2">
                                 <Badge variant="secondary" className="flex items-center gap-1.5 rounded-full">

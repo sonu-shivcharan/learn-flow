@@ -30,12 +30,12 @@ export default function TeacherCoursesPage() {
     return (
       <div className="p-8 max-w-7xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
-          <div className="h-8 w-48 bg-zinc-100 animate-pulse rounded-lg" />
-          <div className="h-10 w-32 bg-zinc-100 animate-pulse rounded-xl" />
+          <div className="h-8 w-48 bg-muted animate-pulse rounded-lg" />
+          <div className="h-10 w-32 bg-muted animate-pulse rounded-xl" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-80 bg-zinc-50 border animate-pulse rounded-lg" />
+            <div key={i} className="h-80 bg-muted/50 border animate-pulse rounded-lg" />
           ))}
         </div>
       </div>
@@ -75,7 +75,7 @@ export default function TeacherCoursesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {courses.length === 0 ? (
-          <div className="col-span-full flex flex-col items-center justify-center py-24 border border-dashed rounded-lg bg-zinc-50/50 text-center">
+          <div className="col-span-full flex flex-col items-center justify-center py-24 border border-dashed rounded-lg bg-muted/30 text-center">
             <PlusCircle className="h-10 w-10 text-muted-foreground mb-4 opacity-50" />
             <p className="text-xl font-semibold mb-2">Your portfolio is empty</p>
             <p className="text-sm text-muted-foreground mb-6">Start your teaching journey today by creating your first course.</p>
@@ -88,7 +88,7 @@ export default function TeacherCoursesPage() {
         ) : (
           courses.map((course: Course) => (
             <Card key={course._id} className="group overflow-hidden border shadow-sm hover:shadow-md transition-all">
-              <div className="aspect-video relative overflow-hidden bg-zinc-100">
+              <div className="aspect-video relative overflow-hidden bg-muted">
                 {course.imageUrl ? (
                   <img src={course.imageUrl} alt={course.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
                 ) : (

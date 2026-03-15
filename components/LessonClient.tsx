@@ -111,7 +111,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
     }
 
     if (!data || !data.lesson) {
-        return <div className="p-6 text-red-500">Lesson not found.</div>;
+        return <div className="p-6 text-destructive">Lesson not found.</div>;
     }
 
     const { lesson, course, userProgress } = data;
@@ -141,7 +141,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                     </TabsList>
                     
                     <TabsContent value="video" className="space-y-4">
-                        <div className="aspect-video bg-zinc-100 rounded-md overflow-hidden flex items-center justify-center relative border">
+                        <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center relative border">
                             {lesson.videoUrl ? (
                                 getYouTubeId(lesson.videoUrl) ? (
                                     <iframe
@@ -164,7 +164,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                                     </video>
                                 )
                             ) : (
-                                <div className="text-zinc-500 font-medium">
+                                <div className="text-muted-foreground font-medium">
                                     No Video Provided for this Lesson
                                 </div>
                             )}
@@ -197,7 +197,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                         </div>
                         
                         <div className="space-y-4">
-                            <p className="text-zinc-600 whitespace-pre-wrap leading-relaxed">
+                            <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
                                 {lesson.description || "No description provided for this lesson."}
                             </p>
                         </div>

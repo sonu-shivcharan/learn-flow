@@ -70,43 +70,43 @@ export function Quiz({ courseId, lessonId, questions }: QuizProps) {
     if (completed) {
         return (
             <div className="space-y-8">
-                <Card className="max-w-xl mx-auto mt-10 shadow-lg border-2 border-emerald-100 overflow-hidden rounded-3xl">
-                    <CardHeader className="text-center bg-emerald-50/50 pb-8">
-                        <CardTitle className="text-3xl font-black text-emerald-900 uppercase tracking-tight">Quiz Results</CardTitle>
+                <Card className="max-w-xl mx-auto mt-10 shadow-lg border-primary/20 overflow-hidden rounded-3xl">
+                    <CardHeader className="text-center bg-muted/50 pb-8">
+                        <CardTitle className="text-3xl font-black text-foreground uppercase tracking-tight">Quiz Results</CardTitle>
                     </CardHeader>
                     <CardContent className="text-center space-y-6 pt-10">
                         <div className="relative inline-block">
-                            <div className="text-6xl font-black text-zinc-900 mb-2">
-                                {score}<span className="text-2xl text-zinc-400">/{questions.length}</span>
+                            <div className="text-6xl font-black text-foreground mb-2">
+                                {score}<span className="text-2xl text-muted-foreground">/{questions.length}</span>
                             </div>
-                            <div className={`h-2 w-full rounded-full ${score === questions.length ? "bg-emerald-500" : "bg-amber-400"}`} />
+                            <div className={`h-2 w-full rounded-full ${score === questions.length ? "bg-primary" : "bg-orange-500"}`} />
                         </div>
-                        <p className="text-lg font-bold text-zinc-600 px-6 leading-tight uppercase tracking-tight italic">
+                        <p className="text-lg font-bold text-muted-foreground px-6 leading-tight uppercase tracking-tight italic">
                             {score === questions.length ? "Legendary! You've mastered this lesson." : "Strategic effort! Focus on your weak spots to grow."}
                         </p>
                         {wrongTopics.length > 0 && (
                             <div className="pt-6 space-y-4">
-                                <p className="text-xs font-black text-zinc-400 uppercase tracking-[0.25em]">Focus areas to review</p>
+                                <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.25em]">Focus areas to review</p>
                                 <div className="flex flex-wrap justify-center gap-2">
                                     {wrongTopics.map(topic => (
-                                        <Badge key={topic} className="bg-rose-50 text-rose-700 border-rose-100 font-bold px-4 py-1.5 rounded-full shadow-sm">{topic}</Badge>
+                                        <Badge key={topic} variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-bold px-4 py-1.5 rounded-full shadow-sm">{topic}</Badge>
                                     ))}
                                 </div>
                             </div>
                         )}
                     </CardContent>
-                    <CardFooter className="justify-center border-t border-zinc-50 bg-zinc-50/20 p-8">
+                    <CardFooter className="justify-center border-t bg-muted/20 p-8">
                         <Button 
                             onClick={() => window.location.reload()} 
                             disabled={submitMutation.isPending}
-                            className="h-12 px-10 rounded-2xl font-black text-xs uppercase tracking-widest bg-zinc-900 border-none hover:bg-emerald-600 transition-all shadow-lg active:scale-95"
+                            className="h-12 px-10 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg active:scale-95"
                         >
                             {submitMutation.isPending ? "Syncing..." : "Retake Training"}
                         </Button>
                     </CardFooter>
                 </Card>
 
-                <div className="max-w-5xl mx-auto border-t border-zinc-100 pt-12">
+                <div className="max-w-5xl mx-auto border-t pt-12">
                     <Recommendations topics={wrongTopics} courseId={courseId} />
                 </div>
             </div>
@@ -116,17 +116,17 @@ export function Quiz({ courseId, lessonId, questions }: QuizProps) {
     const currentQuestion = questions[currentStep];
 
     return (
-        <Card className="max-w-2xl mx-auto mt-10 shadow-sm border-zinc-200">
+        <Card className="max-w-2xl mx-auto mt-10 shadow-sm">
             <CardHeader className="pb-4">
                 <div className="flex justify-between items-center mb-4">
-                    <span className="text-xs font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded">
+                    <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded">
                         Question {currentStep + 1} of {questions.length}
                     </span>
                     <Badge variant="secondary" className="text-[10px] uppercase tracking-wider font-bold">
                         {currentQuestion.topic}
                     </Badge>
                 </div>
-                <CardTitle className="text-2xl font-bold text-zinc-800">
+                <CardTitle className="text-2xl font-bold text-foreground">
                     {currentQuestion.question}
                 </CardTitle>
             </CardHeader>
@@ -137,8 +137,8 @@ export function Quiz({ courseId, lessonId, questions }: QuizProps) {
                         onClick={() => setSelectedOption(option)}
                         className={`w-full p-4 text-left border rounded-xl transition-all font-medium ${
                             selectedOption === option 
-                                ? "bg-zinc-50 border-zinc-400 ring-1 ring-zinc-400 shadow-sm" 
-                                : "bg-white border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300"
+                                ? "bg-accent border-primary ring-1 ring-primary shadow-sm" 
+                                : "bg-card border-input hover:bg-accent hover:border-accent"
                         }`}
                     >
                         {option}
@@ -147,11 +147,7 @@ export function Quiz({ courseId, lessonId, questions }: QuizProps) {
             </CardContent>
             <CardFooter className="pt-8 pb-8 flex flex-col items-center">
                 <Button 
-                    className={`w-full h-14 text-base font-semibold rounded-xl transition-all ${
-                        selectedOption 
-                        ? "bg-zinc-500 hover:bg-zinc-600 text-white" 
-                        : "bg-zinc-200 text-zinc-400 cursor-not-allowed"
-                    }`}
+                    className="w-full h-14 text-base font-semibold rounded-xl transition-all"
                     disabled={!selectedOption} 
                     onClick={handleNext}
                 >

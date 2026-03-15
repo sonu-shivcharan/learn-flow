@@ -54,11 +54,11 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
     return (
         <div className="p-6 max-w-4xl mx-auto space-y-8 pb-32">
             <div className="space-y-4">
-                <div className="aspect-video w-full bg-zinc-100 rounded-lg overflow-hidden relative border shadow-sm">
+                <div className="aspect-video w-full bg-muted rounded-lg overflow-hidden relative border shadow-sm">
                     {course.imageUrl ? (
                         <img src={course.imageUrl} alt={course.title} className="object-cover w-full h-full" />
                     ) : (
-                        <div className="flex items-center justify-center w-full h-full text-zinc-400 bg-zinc-50 font-medium">
+                        <div className="flex items-center justify-center w-full h-full text-muted-foreground bg-muted font-medium">
                             No course image
                         </div>
                     )}
@@ -72,7 +72,7 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
                 </div>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">{course.title}</h1>
+                        <h1 className="text-3xl font-bold text-foreground tracking-tight">{course.title}</h1>
                         <p className="text-muted-foreground mt-2 max-w-xl">{course.description || "No description provided."}</p>
                     </div>
                     <div>
@@ -89,38 +89,38 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
                 </div>
             </div>
 
-            <Separator className="bg-zinc-100 h-1 rounded-full" />
+            <Separator className="bg-border h-1 rounded-full" />
 
             <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-zinc-900">Course Syllabus</h2>
+                <h2 className="text-2xl font-bold text-foreground">Course Syllabus</h2>
                 
                 {chapters.length === 0 ? (
-                    <div className="text-center py-20 bg-zinc-50 rounded-3xl border-2 border-dashed border-zinc-200">
-                        <p className="text-zinc-400 font-bold italic">No chapters published yet.</p>
+                    <div className="text-center py-20 bg-muted/50 rounded-3xl border-2 border-dashed">
+                        <p className="text-muted-foreground font-bold italic">No chapters published yet.</p>
                     </div>
                 ) : (
                     <div className="grid gap-6">
                         {chapters.map((chapter: any, index: number) => (
-                            <div key={chapter._id} className="border rounded-xl p-6 bg-white shadow-sm">
+                            <div key={chapter._id} className="border rounded-xl p-6 bg-card text-card-foreground shadow-sm">
                                 <div className="flex items-center gap-x-4 mb-4">
-                                    <div className="h-10 w-10 rounded-lg bg-zinc-900 text-white flex items-center justify-center font-bold text-lg">
+                                    <div className="h-10 w-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
                                         {index + 1}
                                     </div>
-                                    <h3 className="font-semibold text-xl text-zinc-800">
+                                    <h3 className="font-semibold text-xl text-foreground">
                                         {chapter.title}
                                     </h3>
                                 </div>
                                 <div className="grid gap-4">
                                     {chapter.lessons.length === 0 && (
-                                        <p className="text-sm text-zinc-400 font-medium italic py-4 px-2">No lessons in this chapter yet.</p>
+                                        <p className="text-sm text-muted-foreground font-medium italic py-4 px-2">No lessons in this chapter yet.</p>
                                     )}
                                     {chapter.lessons.map((lesson: any, lIndex: number) => (
-                                        <div key={lesson._id} className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-transparent transition-all">
+                                        <div key={lesson._id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-transparent transition-all">
                                             <div className="flex items-center gap-x-3">
                                                 <div className="text-xs text-muted-foreground font-medium">
                                                     {lIndex + 1}.
                                                 </div>
-                                                <span className="font-medium text-zinc-700 text-sm">{lesson.title}</span>
+                                                <span className="font-medium text-foreground text-sm">{lesson.title}</span>
                                             </div>
                                             {isEnrolled ? (
                                                 <Button variant="outline" size="sm" asChild>

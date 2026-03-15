@@ -37,7 +37,7 @@ export function GetStartedButton() {
     }
   };
 
-  if (!isLoaded) return <div className="w-48 h-12 bg-zinc-100 animate-pulse rounded-full" />;
+  if (!isLoaded) return <div className="w-48 h-12 bg-muted animate-pulse rounded-full" />;
 
   if (isSignedIn) {
     return (
