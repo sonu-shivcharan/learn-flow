@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Quiz } from "@/components/Quiz";
+import { Download, CheckCircle, Trash2, Loader2 } from "lucide-react";
+import { cacheVideo, removeCachedVideo, checkIsCached, getCachedVideoUrl } from "@/lib/offlineStorage";
 
 const getYouTubeId = (url: string) => {
     if (!url) return null;
@@ -21,6 +23,8 @@ interface LessonClientProps {
 export function LessonClient({ courseId, lessonId }: LessonClientProps) {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [offlineStatus, setOfflineStatus] = useState<"checking" | "cached" | "not_cached" | "downloading">("checking");
+    const [offlineUrl, setOfflineUrl] = useState<string | null>(null);
 
     useEffect(() => {
         fetch(`/api/courses/${courseId}/lessons/${lessonId}`)
@@ -34,6 +38,26 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                 setLoading(false);
             });
     }, [courseId, lessonId]);
+
+    useEffect(() => {
+        if (!data || !data.lesson || !data.lesson.videoUrl || getYouTubeId(data.lesson.videoUrl)) {
+            setOfflineStatus("not_cached");
+            return;
+        }
+
+        const checkCache = async () => {
+            const cached = await checkIsCached(lessonId);
+            if (cached) {
+                const url = await getCachedVideoUrl(lessonId);
+                setOfflineUrl(url);
+                setOfflineStatus("cached");
+            } else {
+                setOfflineStatus("not_cached");
+            }
+        };
+
+        checkCache();
+    }, [data, lessonId]);
 
     const markAsComplete = async () => {
         try {
@@ -51,6 +75,31 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
             console.error(error);
         }
     }
+
+    const handleDownload = async () => {
+        if (!data?.lesson?.videoUrl) return;
+        setOfflineStatus("downloading");
+        const success = await cacheVideo(data.lesson.videoUrl, lessonId);
+        if (success) {
+            const url = await getCachedVideoUrl(lessonId);
+            setOfflineUrl(url);
+            setOfflineStatus("cached");
+        } else {
+            setOfflineStatus("not_cached");
+            alert("Failed to download video.");
+        }
+    };
+
+    const handleRemoveDownload = async () => {
+        setOfflineStatus("checking");
+        const success = await removeCachedVideo(lessonId);
+        if (success) {
+            setOfflineUrl(null);
+            setOfflineStatus("not_cached");
+        } else {
+            setOfflineStatus("cached");
+        }
+    };
 
     if (loading) {
         return <div className="p-6 animate-pulse">Loading lesson...</div>;
@@ -105,7 +154,7 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                                     <video 
                                         controls 
                                         className="w-full h-full object-contain"
-                                        src={lesson.videoUrl}
+                                        src={offlineUrl || lesson.videoUrl}
                                     >
                                         Your browser does not support the video tag.
                                     </video>
@@ -117,8 +166,33 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                             )}
                         </div>
 
-                        <div className="mt-8 space-y-4">
+                        <div className="flex items-center justify-between mt-8">
                             <h1 className="text-2xl font-bold">{lesson.title}</h1>
+                            {lesson.videoUrl && !getYouTubeId(lesson.videoUrl) && (
+                                <div className="flex items-center">
+                                    {offlineStatus === "cached" ? (
+                                        <div className="flex items-center gap-x-2">
+                                            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full flex items-center gap-1">
+                                                <CheckCircle className="h-3.5 w-3.5" /> Downloaded
+                                            </span>
+                                            <Button variant="ghost" size="icon" onClick={handleRemoveDownload} className="text-rose-500 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-full">
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ) : offlineStatus === "downloading" ? (
+                                        <Button disabled variant="outline" size="sm" className="rounded-full font-semibold text-xs h-8">
+                                            <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" /> Downloading...
+                                        </Button>
+                                    ) : offlineStatus === "not_cached" ? (
+                                        <Button onClick={handleDownload} variant="outline" size="sm" className="rounded-full font-semibold text-xs h-8">
+                                            <Download className="h-3.5 w-3.5 mr-2" /> Download Offline
+                                        </Button>
+                                    ) : null}
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="space-y-4">
                             <p className="text-zinc-600 whitespace-pre-wrap leading-relaxed">
                                 {lesson.description || "No description provided for this lesson."}
                             </p>

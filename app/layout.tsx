@@ -33,6 +33,10 @@ export default function RootLayout({
         fontSans.variable
       )}
     >
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
       <body>
         <ClerkProvider signUpUrl="/register" signInUrl="/login">
           <QueryProvider>
