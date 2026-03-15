@@ -1,16 +1,14 @@
 {
-  "name": "Drishya Learn Flow",
-  "short_name": "Learn Flow",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "orientation": "portrait",
-  "scope": "/",
+  "name": "LearnFlow",
+  "short_name": "LearnFlow",
   "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/favicon.ico",
-      "sizes": "72x72 96x96 128x128 256x256",
+      "sizes": "64x64",
       "type": "image/x-icon"
     }
   ]

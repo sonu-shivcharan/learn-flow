@@ -14,11 +14,11 @@ interface CourseCardProps {
 export function CourseCard({ id, title, description, imageUrl, price, category }: CourseCardProps) {
     return (
         <Card className="flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow">
-            <div className="aspect-video w-full bg-zinc-100 overflow-hidden flex-shrink-0">
+            <div className="aspect-video w-full bg-muted overflow-hidden flex-shrink-0">
                 {imageUrl ? (
                     <img src={imageUrl} alt={title} className="object-cover w-full h-full" />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-zinc-400 bg-zinc-100">
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-muted">
                         No Image
                     </div>
                 )}

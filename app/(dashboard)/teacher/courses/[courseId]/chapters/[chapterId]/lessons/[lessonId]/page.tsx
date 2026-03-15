@@ -275,16 +275,22 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
                                                 <div className="space-y-2">
                                                     <Label className="text-[10px] font-semibold text-muted-foreground">Correct Answer</Label>
                                                     <Select 
-                                                        value={q.correctAnswer} 
+                                                        value={q.options.includes(q.correctAnswer) && q.correctAnswer !== "" ? q.correctAnswer : "none"} 
                                                         onValueChange={(val) => updateQuizQuestion(qIndex, "correctAnswer", val, true)}
                                                     >
                                                         <SelectTrigger className="h-9">
                                                             <SelectValue placeholder="Pick correct answer" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {q.options.map((o: string) => (
-                                                                <SelectItem key={o} value={o}>{o}</SelectItem>
-                                                            ))}
+                                                            {q.options.map((o: string, idx: number) => {
+                                                                const val = o.trim() || `empty-${idx}`;
+                                                                return (
+                                                                    <SelectItem key={idx} value={val}>
+                                                                        {o.trim() || `Option ${String.fromCharCode(65 + idx)}`}
+                                                                    </SelectItem>
+                                                                );
+                                                            })}
+                                                            <SelectItem value="none" className="hidden">None</SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                 </div>

@@ -63,10 +63,10 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="h-16 flex items-center justify-center p-0 border-b">
         <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
-          <span className="font-bold text-xl text-zinc-900 tracking-tight">LearnFlow</span>
+          <span className="font-bold text-xl text-foreground tracking-tight">LearnFlow</span>
         </Link>
         <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center w-full">
-           <span className="font-bold text-lg text-zinc-900">LF</span>
+           <span className="font-bold text-lg text-foreground">LF</span>
         </div>
       </SidebarHeader>
       <SidebarContent>

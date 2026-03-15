@@ -37,13 +37,13 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-zinc-50 dark:bg-zinc-950">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white dark:bg-zinc-900 shadow-lg rounded-2xl border border-zinc-200 dark:border-zinc-800">
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-muted/50">
+      <div className="max-w-md w-full space-y-8 p-8 bg-card shadow-lg rounded-2xl border">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">
             Welcome to LearnFlow!
           </h2>
-          <p className="mt-4 text-zinc-600 dark:text-zinc-400">
+          <p className="mt-4 text-muted-foreground">
             To get started, please tell us how you plan to use the platform.
           </p>
         </div>

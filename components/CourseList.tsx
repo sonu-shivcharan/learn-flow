@@ -19,7 +19,7 @@ export function CourseList() {
         return (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-64 rounded-xl bg-zinc-100 animate-pulse" />
+                    <div key={i} className="h-64 rounded-xl bg-muted animate-pulse" />
                 ))}
             </div>
         );
@@ -31,7 +31,7 @@ export function CourseList() {
 
     if (courses.length === 0) {
         return (
-            <div className="text-center p-8 border border-dashed rounded-lg bg-zinc-50 text-zinc-500">
+            <div className="text-center p-8 border border-dashed rounded-lg bg-muted/50 text-muted-foreground">
                 No courses available at the moment. Please check back later!
             </div>
         );
