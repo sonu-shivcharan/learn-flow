@@ -6,7 +6,7 @@ import connectToDatabase from "@/lib/dbConnect";
 import User from "@/models/User";
 import { Enrollment } from "@/models/Enrollment";
 import Course from "@/models/Course";
-import { Chapter } from "@/models/ChapterLesson";
+import { Chapter, Lesson } from "@/models/ChapterLesson";
 import { UserProgress } from "@/models/Progress";
 
 export async function GET() {
@@ -40,16 +40,14 @@ export async function GET() {
             const course = enrollment.courseId;
             if (!course) continue;
 
-            // Fetch chapters and their lessons to get the total lesson count
+            // Fetch chapters
             const chapters = await Chapter.find({ courseId: course._id });
-            let totalLessons = 0;
-            const lessonIds: string[] = [];
+            const chapterIds = chapters.map(c => c._id);
 
-            for (const chapter of chapters) {
-                const lessons = chapter.lessons || [];
-                totalLessons += lessons.length;
-                lessons.forEach((lessonId: any) => lessonIds.push(lessonId.toString()));
-            }
+            // Fetch all published lessons under these chapters
+            const lessons = await Lesson.find({ chapterId: { $in: chapterIds }, isPublished: true });
+            const totalLessons = lessons.length;
+            const lessonIds = lessons.map(l => l._id);
 
             // Fetch completed UserProgress for these lessons
             const completedProgress = await UserProgress.countDocuments({

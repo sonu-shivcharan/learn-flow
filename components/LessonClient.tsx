@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,6 +22,7 @@ interface LessonClientProps {
 }
 
 export function LessonClient({ courseId, lessonId }: LessonClientProps) {
+    const queryClient = useQueryClient();
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [offlineStatus, setOfflineStatus] = useState<"checking" | "cached" | "not_cached" | "downloading">("checking");
@@ -70,6 +72,8 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
             if (res.ok) {
                 const updatedProgress = await res.json();
                 setData({ ...data, userProgress: updatedProgress });
+                queryClient.invalidateQueries({ queryKey: ["dashboard-progress"] });
+                queryClient.invalidateQueries({ queryKey: ["course", courseId] });
             }
         } catch (error) {
             console.error(error);
