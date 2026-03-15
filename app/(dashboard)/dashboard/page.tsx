@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import connectToDatabase from "@/lib/dbConnect";
 import User from "@/models/User";
 import { CourseList } from "@/components/CourseList";
-import { Recommendations } from "@/components/Recommendations";
+import { ProgressChart } from "@/components/ProgressChart";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
       </div>
       
       <div className="mt-12">
-        <Recommendations />
+        <ProgressChart />
       </div>
       
       <div className="mt-12">
