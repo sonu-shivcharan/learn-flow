@@ -5,8 +5,9 @@ import { QuizAttempt } from "@/models/Progress";
 import Course from "@/models/Course";
 import User from "@/models/User";
 import { Enrollment } from "@/models/Enrollment";
-import { generateText } from "ai";
+import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
+import { z } from "zod";
 
 export async function GET(req: Request) {
     try {
@@ -44,38 +45,40 @@ export async function GET(req: Request) {
         }
 
         // 4. Use AI to select top 3 recommendations
-        const prompt = `
-            You are an expert learning consultant. Based on the student's weak topics, suggest the best courses from the available list.
-            
-            Student's Weak Topics: ${weakTopics.length > 0 ? weakTopics.join(", ") : "New student, no data yet."}
-            
-            Available Courses:
-            ${availableCourses.map(c => `- ID: ${c._id}, Title: ${c.title}, Description: ${c.description}`).join("\n")}
-            
-            Return a JSON array of exactly 3 recommendation objects (or fewer if not enough courses).
-            Each object MUST have:
-            - courseId: The ID of the course.
-            - reason: A short, encouraging sentence (max 15 words) explaining why this course perfectly addresses their needs or is a great start.
-            
-            Return ONLY the raw JSON array.
-        `;
-
-        const { text } = await generateText({
-            model: google("gemini-1.5-pro"),
-            prompt: prompt,
+        const { object } = await generateObject({
+            model: google("gemini-2.5-flash"),
+            system: "You are an expert learning consultant. Suggest the best courses from the available list based on user's weak topics. Keep reasons extremely concise and impactful (under 200 characters).",
+            prompt: `
+                Student's Weak Topics: ${weakTopics.length > 0 ? weakTopics.join(", ") : "New student, no data yet."}
+                
+                Available Courses (Choose from these EXACT IDs):
+                ${availableCourses.map(c => `- ID: ${c._id}, Title: ${c.title}, Description: ${c.description}`).join("\n")}
+                
+                Return exactly 3 recommendations. Use ONLY the IDs provided above.
+            `,
+            schema: z.object({
+                recommendations: z.array(z.object({
+                    courseId: z.string(),
+                    reason: z.string().max(500),
+                }))
+            })
         });
 
-        const aiRecommendations = JSON.parse(text.replace(/```json|```/g, "").trim());
+        const aiRecommendations = object.recommendations;
         
         // 5. Hydrate the recommendations with full course data
         const hydratedRecommendations = await Promise.all(
             aiRecommendations.map(async (rec: any) => {
-                const course = await Course.findById(rec.courseId);
-                if (!course) return null;
-                return {
-                    ...course.toObject(),
-                    aiReason: rec.reason
-                };
+                try {
+                    const course = await Course.findById(rec.courseId);
+                    if (!course) return null;
+                    return {
+                        ...course.toObject(),
+                        aiReason: rec.reason
+                    };
+                } catch (e) {
+                    return null;
+                }
             })
         );
 
