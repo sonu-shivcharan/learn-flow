@@ -116,32 +116,42 @@ export function Quiz({ courseId, lessonId, questions }: QuizProps) {
     const currentQuestion = questions[currentStep];
 
     return (
-        <Card className="max-w-xl mx-auto mt-10 shadow-md">
-            <CardHeader>
-                <div className="flex justify-between items-center mb-2">
-                    <Badge variant="outline">Question {currentStep + 1} of {questions.length}</Badge>
-                    <Badge variant="secondary">{currentQuestion.topic}</Badge>
+        <Card className="max-w-2xl mx-auto mt-10 shadow-sm border-zinc-200">
+            <CardHeader className="pb-4">
+                <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded">
+                        Question {currentStep + 1} of {questions.length}
+                    </span>
+                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wider font-bold">
+                        {currentQuestion.topic}
+                    </Badge>
                 </div>
-                <CardTitle className="text-xl">{currentQuestion.question}</CardTitle>
+                <CardTitle className="text-2xl font-bold text-zinc-800">
+                    {currentQuestion.question}
+                </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-3 pt-4">
                 {currentQuestion.options.map(option => (
                     <button
                         key={option}
                         onClick={() => setSelectedOption(option)}
-                        className={`w-full p-4 text-left border rounded-lg transition-all ${
+                        className={`w-full p-4 text-left border rounded-xl transition-all font-medium ${
                             selectedOption === option 
-                                ? "bg-blue-50 border-blue-400 ring-1 ring-blue-400 shadow-sm" 
-                                : "hover:bg-zinc-50 hover:border-zinc-300"
+                                ? "bg-zinc-50 border-zinc-400 ring-1 ring-zinc-400 shadow-sm" 
+                                : "bg-white border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300"
                         }`}
                     >
                         {option}
                     </button>
                 ))}
             </CardContent>
-            <CardFooter className="pt-6">
+            <CardFooter className="pt-8 pb-8 flex flex-col items-center">
                 <Button 
-                    className="w-full h-12 text-lg" 
+                    className={`w-full h-14 text-base font-semibold rounded-xl transition-all ${
+                        selectedOption 
+                        ? "bg-zinc-500 hover:bg-zinc-600 text-white" 
+                        : "bg-zinc-200 text-zinc-400 cursor-not-allowed"
+                    }`}
                     disabled={!selectedOption} 
                     onClick={handleNext}
                 >
