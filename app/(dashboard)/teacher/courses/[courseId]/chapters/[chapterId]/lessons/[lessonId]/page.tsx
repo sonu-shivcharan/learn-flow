@@ -13,6 +13,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, LayoutDashboard, Video, HelpCircle, Plus, Trash } from "lucide-react";
 
+const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
 interface LessonEditorProps {
     params: Promise<{ courseId: string; chapterId: string; lessonId: string }>;
 }
@@ -191,7 +198,20 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
                             </div>
                             {videoUrl && (
                                 <div className="aspect-video mt-4 rounded-2xl overflow-hidden border-2 border-sky-100 bg-black shadow-lg">
-                                    <video src={videoUrl} controls className="w-full h-full" />
+                                    {getYouTubeId(videoUrl) ? (
+                                        <iframe
+                                            width="100%"
+                                            height="100%"
+                                            src={`https://www.youtube.com/embed/${getYouTubeId(videoUrl)}`}
+                                            title="YouTube video player"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            className="w-full h-full shadow-lg"
+                                        />
+                                    ) : (
+                                        <video src={videoUrl} controls className="w-full h-full" />
+                                    )}
                                 </div>
                             )}
                         </CardContent>

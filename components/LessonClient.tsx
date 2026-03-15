@@ -6,6 +6,13 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Quiz } from "@/components/Quiz";
 
+const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
 interface LessonClientProps {
     courseId: string;
     lessonId: string;
@@ -83,13 +90,26 @@ export function LessonClient({ courseId, lessonId }: LessonClientProps) {
                     <TabsContent value="video" className="space-y-4">
                         <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative shadow-lg">
                             {lesson.videoUrl ? (
-                                <video 
-                                    controls 
-                                    className="w-full h-full object-contain"
-                                    src={lesson.videoUrl}
-                                >
-                                    Your browser does not support the video tag.
-                                </video>
+                                getYouTubeId(lesson.videoUrl) ? (
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        src={`https://www.youtube.com/embed/${getYouTubeId(lesson.videoUrl)}`}
+                                        title="YouTube video player"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full shadow-lg"
+                                    />
+                                ) : (
+                                    <video 
+                                        controls 
+                                        className="w-full h-full object-contain"
+                                        src={lesson.videoUrl}
+                                    >
+                                        Your browser does not support the video tag.
+                                    </video>
+                                )
                             ) : (
                                 <div className="text-zinc-500 font-medium">
                                     No Video Provided for this Lesson
