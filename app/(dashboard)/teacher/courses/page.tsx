@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
@@ -8,23 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 
 export default function TeacherCoursesPage() {
-  const [courses, setCourses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: courses = [], isLoading } = useQuery({
+    queryKey: ["teacher-courses"],
+    queryFn: async () => {
+      const res = await fetch("/api/teacher/courses");
+      if (!res.ok) throw new Error("Failed to fetch teacher courses");
+      return res.json();
+    }
+  });
 
-  useEffect(() => {
-    fetch("/api/teacher/courses")
-      .then(res => res.json())
-      .then(data => {
-        setCourses(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return <div className="p-6">Loading your courses...</div>;
   }
 

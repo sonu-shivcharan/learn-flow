@@ -1,29 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export function Recommendations() {
-    const [courses, setCourses] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data: courses = [], isLoading } = useQuery({
+        queryKey: ["recommendations"],
+        queryFn: async () => {
+            const res = await fetch("/api/recommendations");
+            if (!res.ok) throw new Error("Failed to fetch recommendations");
+            return res.json();
+        }
+    });
 
-    useEffect(() => {
-        fetch("/api/recommendations")
-            .then(res => res.json())
-            .then(data => {
-                setCourses(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) return (
+    if (isLoading) return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map(i => (
                 <div key={i} className="h-48 rounded-3xl bg-zinc-100 animate-pulse" />
@@ -42,7 +35,7 @@ export function Recommendations() {
                 <h2 className="text-2xl font-black text-zinc-900 tracking-tight">AI Personalized Recommendations</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courses.map(course => (
+                {courses.map((course: any) => (
                     <Card key={course._id} className="group overflow-hidden rounded-3xl border-2 border-zinc-50 hover:border-amber-100 transition-all shadow-sm hover:shadow-xl hover:-translate-y-1">
                         <div className="aspect-video relative overflow-hidden">
                             {course.imageUrl ? (

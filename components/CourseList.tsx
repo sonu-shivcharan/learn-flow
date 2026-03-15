@@ -1,26 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { CourseCard } from "./CourseCard";
 
 export function CourseList() {
-    const [courses, setCourses] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["courses"],
+        queryFn: async () => {
+            const res = await fetch("/api/courses");
+            if (!res.ok) throw new Error("Failed to fetch courses");
+            return res.json();
+        }
+    });
 
-    useEffect(() => {
-        fetch("/api/courses")
-            .then(res => res.json())
-            .then(data => {
-                setCourses(data.courses || []);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error("Failed to fetch courses:", err);
-                setLoading(false);
-            });
-    }, []);
+    const courses = data?.courses || [];
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {[...Array(3)].map((_, i) => (
@@ -28,6 +23,10 @@ export function CourseList() {
                 ))}
             </div>
         );
+    }
+
+    if (error) {
+        return <div className="text-red-500">Error loading courses.</div>;
     }
 
     if (courses.length === 0) {
@@ -40,7 +39,7 @@ export function CourseList() {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {courses.map(course => (
+            {courses.map((course: any) => (
                 <CourseCard 
                     key={course._id} 
                     id={course._id} 

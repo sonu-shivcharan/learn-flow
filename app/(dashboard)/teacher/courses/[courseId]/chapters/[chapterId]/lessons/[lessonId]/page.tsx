@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,50 +16,52 @@ interface LessonEditorProps {
 export default function LessonEditorPage({ params }: LessonEditorProps) {
     const resolvedParams = use(params);
     const router = useRouter();
-    const [lesson, setLesson] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [isUpdating, setIsUpdating] = useState(false);
+    const queryClient = useQueryClient();
 
-    // Form states
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [videoUrl, setVideoUrl] = useState("");
     const [quiz, setQuiz] = useState<any[]>([]);
 
-    useEffect(() => {
-        fetch(`/api/courses/${resolvedParams.courseId}/lessons/${resolvedParams.lessonId}`)
-            .then(res => res.json())
-            .then(data => {
-                setLesson(data.lesson);
-                setTitle(data.lesson.title);
-                setDescription(data.lesson.description || "");
-                setVideoUrl(data.lesson.videoUrl || "");
-                setQuiz(data.lesson.quiz || []);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, [resolvedParams.courseId, resolvedParams.lessonId]);
+    const { data, isLoading } = useQuery({
+        queryKey: ["lesson", resolvedParams.courseId, resolvedParams.lessonId],
+        queryFn: async () => {
+            const res = await fetch(`/api/courses/${resolvedParams.courseId}/lessons/${resolvedParams.lessonId}`);
+            if (!res.ok) throw new Error("Failed to fetch lesson details");
+            return res.json();
+        }
+    });
 
-    const onUpdate = async (values: any) => {
-        try {
-            setIsUpdating(true);
+    useEffect(() => {
+        if (data?.lesson) {
+            setTitle(data.lesson.title || "");
+            setDescription(data.lesson.description || "");
+            setVideoUrl(data.lesson.videoUrl || "");
+            setQuiz(data.lesson.quiz || []);
+        }
+    }, [data]);
+
+    const updateMutation = useMutation({
+        mutationFn: async (values: any) => {
             const res = await fetch(`/api/courses/${resolvedParams.courseId}/lessons/${resolvedParams.lessonId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             });
-            if (res.ok) {
-                const updated = await res.json();
-                setLesson(updated);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsUpdating(false);
+            if (!res.ok) throw new Error("Failed to update lesson");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["lesson", resolvedParams.courseId, resolvedParams.lessonId] });
+            queryClient.invalidateQueries({ queryKey: ["chapter", resolvedParams.courseId, resolvedParams.chapterId] });
         }
+    });
+
+    const isUpdating = updateMutation.isPending;
+    const lesson = data?.lesson;
+
+    const onUpdate = (values: any) => {
+        updateMutation.mutate(values);
     };
 
     const addQuizQuestion = () => {
@@ -93,11 +96,11 @@ export default function LessonEditorPage({ params }: LessonEditorProps) {
         onUpdate({ quiz: updatedQuiz });
     };
 
-    const togglePublish = async () => {
-        await onUpdate({ isPublished: !lesson.isPublished });
+    const togglePublish = () => {
+        onUpdate({ isPublished: !lesson.isPublished });
     };
 
-    if (loading) return <div className="p-6 text-purple-800">Loading lesson editor...</div>;
+    if (isLoading) return <div className="p-6 text-purple-800">Loading lesson editor...</div>;
     if (!lesson) return <div className="p-6">Lesson not found.</div>;
 
     const requiredFields = [title, description, videoUrl];

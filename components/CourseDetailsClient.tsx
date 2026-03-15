@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -9,23 +9,32 @@ interface CourseDetailsClientProps {
 }
 
 export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
-    const [data, setData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        fetch(`/api/courses/${courseId}`)
-            .then(res => res.json())
-            .then(resData => {
-                setData(resData);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
+    const { data, isLoading } = useQuery({
+        queryKey: ["course", courseId],
+        queryFn: async () => {
+            const res = await fetch(`/api/courses/${courseId}`);
+            if (!res.ok) throw new Error("Failed to fetch course details");
+            return res.json();
+        }
+    });
+
+    const enrollMutation = useMutation({
+        mutationFn: async () => {
+            const res = await fetch(`/api/courses/${courseId}/enroll`, {
+                method: "POST"
             });
-    }, [courseId]);
+            if (!res.ok) throw new Error("Failed to enroll");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["course", courseId] });
+            queryClient.invalidateQueries({ queryKey: ["recommendations"] });
+        }
+    });
 
-    if (loading) {
+    if (isLoading) {
         return <div className="p-6 animate-pulse">Loading course details...</div>;
     }
 
@@ -33,24 +42,11 @@ export function CourseDetailsClient({ courseId }: CourseDetailsClientProps) {
         return <div className="p-6 text-red-500">Course not found.</div>;
     }
 
-    const { course, chapters, isEnrolled: initialIsEnrolled } = data;
-    const [isEnrolled, setIsEnrolled] = useState(initialIsEnrolled);
-    const [isEnrolling, setIsEnrolling] = useState(false);
+    const { course, chapters, isEnrolled } = data;
+    const isEnrolling = enrollMutation.isPending;
 
-    const onEnroll = async () => {
-        try {
-            setIsEnrolling(true);
-            const res = await fetch(`/api/courses/${courseId}/enroll`, {
-                method: "POST"
-            });
-            if (res.ok) {
-                setIsEnrolled(true);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsEnrolling(false);
-        }
+    const onEnroll = () => {
+        enrollMutation.mutate();
     };
 
     return (

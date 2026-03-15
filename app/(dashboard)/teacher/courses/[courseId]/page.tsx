@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,86 +16,86 @@ interface CourseEditorProps {
 export default function CourseEditorPage({ params }: CourseEditorProps) {
     const resolvedParams = use(params);
     const router = useRouter();
-    const [course, setCourse] = useState<any>(null);
-    const [chapters, setChapters] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [isUpdating, setIsUpdating] = useState(false);
+    const queryClient = useQueryClient();
 
-    // Form states
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [price, setPrice] = useState("");
     const [chapterTitle, setChapterTitle] = useState("");
 
-    useEffect(() => {
-        fetch(`/api/courses/${resolvedParams.courseId}`)
-            .then(res => res.json())
-            .then(data => {
-                setCourse(data.course);
-                setChapters(data.chapters);
-                setTitle(data.course.title);
-                setDescription(data.course.description || "");
-                setImageUrl(data.course.imageUrl || "");
-                setPrice(data.course.price?.toString() || "");
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, [resolvedParams.courseId]);
+    const { data, isLoading } = useQuery({
+        queryKey: ["course", resolvedParams.courseId],
+        queryFn: async () => {
+            const res = await fetch(`/api/courses/${resolvedParams.courseId}`);
+            if (!res.ok) throw new Error("Failed to fetch course details");
+            return res.json();
+        }
+    });
 
-    const onUpdate = async (values: any) => {
-        try {
-            setIsUpdating(true);
+    useEffect(() => {
+        if (data?.course) {
+            setTitle(data.course.title || "");
+            setDescription(data.course.description || "");
+            setImageUrl(data.course.imageUrl || "");
+            setPrice(data.course.price?.toString() || "");
+        }
+    }, [data]);
+
+    const updateMutation = useMutation({
+        mutationFn: async (values: any) => {
             const res = await fetch(`/api/courses/${resolvedParams.courseId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(values),
             });
-            if (res.ok) {
-                const updated = await res.json();
-                setCourse(updated);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsUpdating(false);
+            if (!res.ok) throw new Error("Failed to update course");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["course", resolvedParams.courseId] });
+            queryClient.invalidateQueries({ queryKey: ["teacher-courses"] });
         }
+    });
+
+    const addChapterMutation = useMutation({
+        mutationFn: async (title: string) => {
+            const res = await fetch(`/api/courses/${resolvedParams.courseId}/chapters`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title }),
+            });
+            if (!res.ok) throw new Error("Failed to add chapter");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["course", resolvedParams.courseId] });
+            setChapterTitle("");
+        }
+    });
+
+    const course = data?.course;
+    const chapters = data?.chapters || [];
+    const isUpdating = updateMutation.isPending || addChapterMutation.isPending;
+
+    const onUpdate = (values: any) => {
+        updateMutation.mutate(values);
     };
 
-    const togglePublish = async () => {
-        await onUpdate({ isPublished: !course.isPublished });
+    const togglePublish = () => {
+        onUpdate({ isPublished: !course.isPublished });
     };
 
-    if (loading) return <div className="p-6">Loading course editor...</div>;
+    const addChapter = () => {
+        if (!chapterTitle) return;
+        addChapterMutation.mutate(chapterTitle);
+    };
+
+    if (isLoading) return <div className="p-6">Loading course editor...</div>;
     if (!course) return <div className="p-6">Course not found.</div>;
 
     const completionText = `(${[title, description, imageUrl, price, chapters.length > 0].filter(Boolean).length}/5) fields completed`;
     const isComplete = title && description && imageUrl && price && chapters.length > 0;
-
-
-    const addChapter = async () => {
-        if (!chapterTitle) return;
-        try {
-            setIsUpdating(true);
-            const res = await fetch(`/api/courses/${resolvedParams.courseId}/chapters`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title: chapterTitle }),
-            });
-            if (res.ok) {
-                const newChapter = await res.json();
-                setChapters([...chapters, newChapter]);
-                setChapterTitle("");
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsUpdating(false);
-        }
-    };
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
@@ -214,7 +215,7 @@ export default function CourseEditorPage({ params }: CourseEditorProps) {
                                 </div>
                             ) : (
                                 <div className="space-y-3">
-                                    {chapters.map(chapter => (
+                                    {chapters.map((chapter: any) => (
                                         <div 
                                             key={chapter._id} 
                                             className="flex items-center gap-x-2 bg-white border-2 border-purple-50 text-purple-900 font-bold rounded-xl mb-4 text-sm p-4 shadow-sm hover:border-purple-200 transition-all cursor-pointer hover:shadow-md"
